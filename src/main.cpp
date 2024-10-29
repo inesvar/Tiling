@@ -5,8 +5,7 @@
 
 std::string getWindowTitle(void);
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(500, 500);
@@ -17,5 +16,6 @@ int main(int argc, char** argv)
 }
 
 std::string getWindowTitle(void) {
-    return "Tiling V" + std::to_string(VERSION_MAJOR) + "." + std::to_string(VERSION_MINOR);
+    return "Tiling V" + std::to_string(VERSION_MAJOR) + "." +
+           std::to_string(VERSION_MINOR);
 }
