@@ -19,6 +19,8 @@ Polygon::Polygon(int nbSides) {
         xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
                    sin(2.0 * i * pi<double>() / nbSides));
     }
+    center.x = 0.5f;
+    center.y = points[int(nbSides / 2)].y;
 }
 
 Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
@@ -27,14 +29,17 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
     for (int i = 0; i < nbSides; i++) {
         points[i] = vec3(points[i], 1.0f) * transform;
     }
+    center = vec3(center, 1.0f) * transform;
 }
 
 void Polygon::render(void) const {
-    glBegin(GL_POLYGON);
+    glBegin(GL_TRIANGLE_FAN);
     glColor3fv(value_ptr(color));
+    glVertex3fv(value_ptr(center));
     for (const auto& vertex : points) {
         glVertex3fv(value_ptr(vertex));
     }
+    glVertex3fv(value_ptr(points[0]));
     glEnd();
 }
 
