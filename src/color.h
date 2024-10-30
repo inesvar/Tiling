@@ -3,6 +3,6 @@
 
 #include <glm/vec3.hpp>
 
-glm::vec3 nextColor();
+glm::vec3 nextColor(float hueStep = 30);
 
 #endif
