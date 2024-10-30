@@ -27,9 +27,9 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
     vec2 diff = b - a;
     mat2x3 transform = mat2x3(diff.x, -diff.y, a.x, diff.y, diff.x, a.y);
     for (int i = 0; i < nbSides; i++) {
-        points[i] = vec3(points[i], 1.0f) * transform;
+        points[i] = transpose(transform) * vec3(points[i], 1.0f);
     }
-    center = vec3(center, 1.0f) * transform;
+    center = transpose(transform) * vec3(center, 1.0f);
 }
 
 void Polygon::render(void) const {
