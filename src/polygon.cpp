@@ -9,6 +9,8 @@
 
 using namespace glm;
 
+/// @brief  Builds a Polygon with vertices (0, 0), (1, 0)...
+/// @param nbSides 
 Polygon::Polygon(int nbSides) {
     assert(nbSides >= 3);
     color = nextColor();
@@ -23,6 +25,10 @@ Polygon::Polygon(int nbSides) {
     center.y = points[int(nbSides / 2)].y;
 }
 
+/// @brief Builds a Polygon with vertices a, b...
+/// @param a 
+/// @param b 
+/// @param nbSides 
 Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
     vec2 diff = b - a;
     mat2x3 transform = mat2x3(diff.x, -diff.y, a.x, diff.y, diff.x, a.y);
