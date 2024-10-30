@@ -1,27 +1,29 @@
 #include "polygon.h"
+#include "color.h"
 #include <GL/glut.h>
 #include <cassert>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <vector>
 
 using namespace glm;
 
-Polygon polygon{3};
-
 Polygon::Polygon(int nbSides) {
     assert(nbSides >= 3);
+    color = nextColor();
     points.reserve(nbSides);
     vec2 xy = vec2(-0.0f);
     for (int i = 0; i < nbSides; i++) {
         points.push_back(xy);
-        xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
-                   sin(2.0 * i * pi<double>() / nbSides));
+        xy += 0.5f * vec2(cos(2.0 * i * pi<double>() / nbSides),
+                          sin(2.0 * i * pi<double>() / nbSides));
     }
 }
 
 void Polygon::render(void) const {
     glBegin(GL_POLYGON);
+    glColor3fv(value_ptr(color));
     for (const auto& vertex : points) {
         glVertex3fv(value_ptr(vertex));
     }
@@ -29,7 +31,10 @@ void Polygon::render(void) const {
 }
 
 void displayPolygon(void) {
+    std::vector<Polygon> polygons{6, 5, 4, 3};
     glClear(GL_COLOR_BUFFER_BIT);
-    polygon.render();
+    for (auto polygon : polygons) {
+        polygon.render();
+    }
     glFlush();
 }

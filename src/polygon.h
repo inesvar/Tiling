@@ -2,10 +2,12 @@
 #define POLYGON_H
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <vector>
 
 class Polygon {
     std::vector<glm::vec2> points{};
+    glm::vec3 color;
 
   public:
     Polygon(int nbSides);
