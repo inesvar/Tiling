@@ -24,8 +24,8 @@ target_link_libraries(main PRIVATE OpenGL::GL GLUT::GLUT)
 target_include_directories(main PRIVATE "${SOURCE_DIR}" PUBLIC "${PROJECT_BINARY_DIR}")
 
 add_custom_target(run
+    COMMAND ${CMAKE_COMMAND} --build "${PROJECT_BINARY_DIR}" --clean-first
     COMMAND ./main
-    DEPENDS main
 )
 
 message(STATUS "Source directory: ${SOURCE_DIR}")
