@@ -11,6 +11,7 @@ class Polygon {
 
   public:
     Polygon(int nbSides);
+    Polygon(const glm::vec2& a, const glm::vec2& b, int nbSides);
     void render(void) const;
 };
 

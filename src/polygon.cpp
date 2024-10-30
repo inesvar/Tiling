@@ -16,8 +16,16 @@ Polygon::Polygon(int nbSides) {
     vec2 xy = vec2(-0.0f);
     for (int i = 0; i < nbSides; i++) {
         points.push_back(xy);
-        xy += 0.5f * vec2(cos(2.0 * i * pi<double>() / nbSides),
-                          sin(2.0 * i * pi<double>() / nbSides));
+        xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
+                   sin(2.0 * i * pi<double>() / nbSides));
+    }
+}
+
+Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
+    vec2 diff = b - a;
+    mat2x3 transform = mat2x3(diff.x, -diff.y, a.x, diff.y, diff.x, a.y);
+    for (int i = 0; i < nbSides; i++) {
+        points[i] = vec3(points[i], 1.0f) * transform;
     }
 }
 
@@ -31,7 +39,14 @@ void Polygon::render(void) const {
 }
 
 void displayPolygon(void) {
-    std::vector<Polygon> polygons{6, 5, 4, 3};
+    vec2 leftOrigin = vec2(-0.2f, -0.8f);
+    vec2 rightOrigin = vec2(0.2f, -0.8f);
+
+    std::vector<Polygon> polygons{};
+    for (int i = 8; i > 2; i--) {
+        polygons.emplace_back(leftOrigin, rightOrigin, i);
+    }
+
     glClear(GL_COLOR_BUFFER_BIT);
     for (auto polygon : polygons) {
         polygon.render();
