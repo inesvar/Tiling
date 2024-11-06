@@ -38,7 +38,7 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) : Polygon(nbSides) {
     center = transpose(transform) * vec3(center, 1.0f);
 }
 
-void Polygon::render(void) const {
+void Polygon::render() const {
     glBegin(GL_TRIANGLE_FAN);
     glColor3fv(value_ptr(color));
     glVertex3fv(value_ptr(center));
@@ -49,7 +49,7 @@ void Polygon::render(void) const {
     glEnd();
 }
 
-void displayPolygon(void) {
+void displayPolygon() {
     vec2 leftOrigin = vec2(-0.2f, -0.8f);
     vec2 rightOrigin = vec2(0.2f, -0.8f);
 

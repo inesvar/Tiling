@@ -13,9 +13,9 @@ class Polygon {
   public:
     Polygon(int nbSides);
     Polygon(const glm::vec2& a, const glm::vec2& b, int nbSides);
-    void render(void) const;
+    void render() const;
 };
 
-void displayPolygon(void);
+void displayPolygon();
 
 #endif /* POLYGON_H */

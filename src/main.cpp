@@ -3,16 +3,14 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-std::string getWindowTitle(void);
+std::string getWindowTitle();
 
-int main(void) {
-    GLFWwindow* window;
-
+int main() {
     if (!glfwInit()) {
         return -1;
     }
 
-    window = glfwCreateWindow(500, 500, getWindowTitle().data(), NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(500, 500, getWindowTitle().data(), NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -29,7 +27,7 @@ int main(void) {
     glfwTerminate();
 }
 
-std::string getWindowTitle(void) {
+std::string getWindowTitle() {
     return "Tiling V" + std::to_string(VERSION_MAJOR) + "." +
            std::to_string(VERSION_MINOR);
 }
