@@ -1,18 +1,32 @@
 #include "config.h"
 #include "polygon.h"
-#include <GL/glut.h>
+#include <GLFW/glfw3.h>
 #include <string>
 
 std::string getWindowTitle(void);
 
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);
-    glutInitWindowSize(500, 500);
-    glutInitWindowPosition(1300, 100);
-    glutCreateWindow(getWindowTitle().data());
-    glutDisplayFunc(displayPolygon);
-    glutMainLoop();
+int main(void) {
+    GLFWwindow* window;
+
+    if (!glfwInit()) {
+        return -1;
+    }
+
+    window = glfwCreateWindow(500, 500, getWindowTitle().data(), NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
 }
 
 std::string getWindowTitle(void) {

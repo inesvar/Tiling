@@ -18,8 +18,9 @@ add_executable(main ${SRC_FILES})
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(glfw3 REQUIRED)
 
-target_link_libraries(main PRIVATE OpenGL::GL GLUT::GLUT)
+target_link_libraries(main PRIVATE OpenGL::GL GLUT::GLUT glfw)
 
 target_include_directories(main PRIVATE "${SOURCE_DIR}" PUBLIC "${PROJECT_BINARY_DIR}")
 
