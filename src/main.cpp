@@ -11,6 +11,7 @@ const int WINDOW_HEIGHT = 600;
 
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);
+void processInput(GLFWwindow* window);
 
 int main() {
     if (!glfwInit()) {
@@ -40,6 +41,7 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
+        processInput(window);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -47,13 +49,18 @@ int main() {
     glfwTerminate();
 }
 
-std::string getWindowTitle() {
-    return "Tiling V" + std::to_string(VERSION_MAJOR) + "." +
-           std::to_string(VERSION_MINOR);
-}
-
 void framebufferSizeCallback(__attribute__((unused)) GLFWwindow* window,
                              int height, int width) {
     // NOTE: this probably only works with one window...
     glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
+std::string getWindowTitle() {
+    return "Tiling V" + std::to_string(VERSION_MAJOR) + "." +
+           std::to_string(VERSION_MINOR);
 }
