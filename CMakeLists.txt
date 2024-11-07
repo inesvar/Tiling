@@ -10,17 +10,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
-file(GLOB SRC_FILES "${SOURCE_DIR}/*.cpp")
+file(GLOB SRC_FILES "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.c")
 
 configure_file(${SOURCE_DIR}/config.h.in "${PROJECT_BINARY_DIR}/config.h")
 
 add_executable(main ${SRC_FILES})
 
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
 find_package(glfw3 REQUIRED)
 
-target_link_libraries(main PRIVATE OpenGL::GL GLUT::GLUT glfw)
+target_link_libraries(main PRIVATE OpenGL::GL glfw)
 
 target_include_directories(main PRIVATE "${SOURCE_DIR}" PUBLIC "${PROJECT_BINARY_DIR}")
 
