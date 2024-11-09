@@ -16,6 +16,4 @@ class Polygon {
     void render() const;
 };
 
-void displayPolygon();
-
 #endif /* POLYGON_H */

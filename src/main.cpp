@@ -9,6 +9,21 @@
 const int WINDOW_WIDTH = 600;
 const int WINDOW_HEIGHT = 600;
 
+const char* minimalVertexShader =
+    "#version 330 core\n"
+    "layout (location = 0) in vec2 pos;"
+    "// location is the id of the vertex attribute\n"
+    "void main() {\n"
+    "    gl_Position = vec4(pos, 0.0, 1.0);\n"
+    "}\n";
+
+const char* minimalFragmentShader = "#version 330 core\n"
+                                    "uniform vec4 color;\n"
+                                    "void main() {\n"
+                                    "    gl_FragColor = color;\n"
+                                    "}\n";
+
+bool createProgram(unsigned& program);
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);
 void processInput(GLFWwindow* window);
@@ -39,13 +54,32 @@ int main() {
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
+    unsigned program;
+    if (!createProgram(program)) {
+        return -1;
+    }
+    glUseProgram(program);
+
+    glm::vec2 leftOrigin = glm::vec2(-0.2f, -0.8f);
+    glm::vec2 rightOrigin = glm::vec2(0.2f, -0.8f);
+
+    std::vector<Polygon> polygons{};
+    for (int i = 8; i > 2; i--) {
+        polygons.emplace_back(leftOrigin, rightOrigin, i);
+    }
+
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
         processInput(window);
+        glClear(GL_COLOR_BUFFER_BIT);
+        for (auto polygon : polygons) {
+            polygon.render();
+        }
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    glDeleteProgram(program);
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
 
@@ -63,4 +97,52 @@ void processInput(GLFWwindow* window) {
 std::string getWindowTitle() {
     return "Tiling V" + std::to_string(VERSION_MAJOR) + "." +
            std::to_string(VERSION_MINOR);
+}
+
+bool createProgram(unsigned& program) {
+    // create vertex shader
+    unsigned vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &minimalVertexShader, NULL);
+    glCompileShader(vertexShader);
+
+    int success;
+    char text[512];
+    char* infoLog = text;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << infoLog << std::endl;
+        return false;
+    }
+
+    // create fragment shader
+    unsigned fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &minimalFragmentShader, NULL);
+    glCompileShader(fragmentShader);
+
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << infoLog << std::endl;
+        return false;
+    }
+
+    // link shaders in a program
+    program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glLinkProgram(program);
+
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        std::cout << infoLog << std::endl;
+        return false;
+    }
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    return true;
 }
