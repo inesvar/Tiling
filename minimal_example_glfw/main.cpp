@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 const int WIDTH = 500;
@@ -16,12 +17,14 @@ const char* minimalVertexShader =
     "}\n";
 
 const char* minimalFragmentShader = "#version 330 core\n"
+                                    "uniform vec4 color;\n"
                                     "void main() {\n"
-                                    "    gl_FragColor = vec4(1.0);\n"
+                                    "    gl_FragColor = color;\n"
                                     "}\n";
 
 void createVboAndVao(unsigned& vbo, unsigned& vao);
 bool createProgram(unsigned& program);
+glm::vec4 purpleGradient();
 
 int main() {
     if (!glfwInit()) {
@@ -37,23 +40,24 @@ int main() {
 
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    unsigned triangleData, triangleArray, displayInWhite;
+    unsigned triangleData, triangleArray, displayInColor;
     createVboAndVao(triangleData, triangleArray);
-    if (!createProgram(displayInWhite)) {
+    if (!createProgram(displayInColor)) {
         return -1;
     }
 
     while (!glfwWindowShouldClose(window)) {
-        // double time = glfwGetTime();
         glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(displayInWhite);
+        int colorUniform = glGetUniformLocation(displayInColor, "color");
+        glUniform4fv(colorUniform, 1, glm::value_ptr(purpleGradient()));
+        glUseProgram(displayInColor);
         glBindVertexArray(triangleArray);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteProgram(displayInWhite);
+    glDeleteProgram(displayInColor);
     glDeleteVertexArrays(1, &triangleData);
     glDeleteBuffers(1, &triangleData);
 
@@ -125,4 +129,10 @@ bool createProgram(unsigned& program) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     return true;
+}
+
+glm::vec4 purpleGradient() {
+    double time = glfwGetTime();
+    glm::vec4 color = glm::vec4(1.0, cos(time) * 0.5 + 0.5, 1.0, 1.0);
+    return color;
 }
