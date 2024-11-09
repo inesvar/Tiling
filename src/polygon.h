@@ -8,12 +8,18 @@
 class Polygon {
     std::vector<glm::vec2> points{};
     glm::vec2 center{};
-    glm::vec3 color;
+    glm::vec3 color{};
+    unsigned vbo{};
+    unsigned vao{};
+    void init(int nbSides);
+    void initGL();
 
   public:
     Polygon(int nbSides);
     Polygon(const glm::vec2& a, const glm::vec2& b, int nbSides);
-    void render() const;
+    ~Polygon();
+    void cleanGL();
+    void render(unsigned program) const;
 };
 
 #endif /* POLYGON_H */

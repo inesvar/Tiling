@@ -18,9 +18,9 @@ const char* minimalVertexShader =
     "}\n";
 
 const char* minimalFragmentShader = "#version 330 core\n"
-                                    "uniform vec4 color;\n"
+                                    "uniform vec3 color;\n"
                                     "void main() {\n"
-                                    "    gl_FragColor = color;\n"
+                                    "    gl_FragColor = vec4(color, 1.0);\n"
                                     "}\n";
 
 bool createProgram(unsigned& program);
@@ -64,6 +64,8 @@ int main() {
     glm::vec2 rightOrigin = glm::vec2(0.2f, -0.8f);
 
     std::vector<Polygon> polygons{};
+    // TODO remove after making Polygon non-copyable
+    polygons.reserve(6);
     for (int i = 8; i > 2; i--) {
         polygons.emplace_back(leftOrigin, rightOrigin, i);
     }
@@ -71,14 +73,17 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
-        for (auto polygon : polygons) {
-            polygon.render();
+        for (auto& polygon : polygons) {
+            polygon.render(program);
         }
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     glDeleteProgram(program);
+    for (auto& polygon : polygons) {
+        polygon.cleanGL();
+    }
     glfwDestroyWindow(window);
     glfwTerminate();
 }
