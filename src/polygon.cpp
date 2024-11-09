@@ -1,7 +1,5 @@
 #include "polygon.h"
 #include "color.h"
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <cassert>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -11,14 +9,14 @@
 
 using namespace glm;
 
-/// @brief  Builds a Polygon with vertices (0, 0), (1, 0)...
+/// @brief  Create a polygon with `nbSides` vertices (0, 0), (1, 0)...
 /// @param nbSides
 Polygon::Polygon(int nbSides) {
     init(nbSides);
     initGL();
 }
 
-/// @brief Builds a Polygon with vertices a, b...
+/// @brief Create a polygon with `nbSides` vertices `a`, `b`...
 /// @param a
 /// @param b
 /// @param nbSides
@@ -34,19 +32,23 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) {
 }
 
 Polygon::~Polygon() {
-    std::cout << "Deleted Polygon with " << points.size() << " sides." << std::endl;
+    std::cout << "Deleted Polygon with " << points.size() << " sides."
+              << std::endl;
 }
 
+/// @brief Clean the associated GL vertex array and vertex buffer
 void Polygon::cleanGL() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
 }
 
-void Polygon::render(unsigned program) const {
-    int colorUniform = glGetUniformLocation(program, "color");
+/// @brief Render the polygon using `shaderProgram` and `drawingMode`
+/// @param program
+void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
+    int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, points.size());
+    glDrawArrays(drawingMode, 0, points.size());
 }
 
 void Polygon::init(int nbSides) {
