@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <string>
 
@@ -62,17 +63,20 @@ int main() {
     }
     glUseProgram(program);
 
-    glm::vec2 leftOrigin = glm::vec2(-0.2f, -0.8f);
-    glm::vec2 rightOrigin = glm::vec2(0.2f, -0.8f);
-
     std::vector<Polygon> polygons{};
     for (int i = 8; i > 2; i--) {
-        polygons.emplace_back(leftOrigin, rightOrigin, i);
+        polygons.emplace_back(i);
     }
 
     while (!glfwWindowShouldClose(window)) {
+        double time = glfwGetTime();
         processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
+        for (auto& polygon : polygons) {
+            polygon.positionAt(glm::vec2(0.0),
+                               glm::vec2(cos(time) * 0.4, sin(time) * 0.4),
+                               GL_DYNAMIC_DRAW);
+        }
         for (auto& polygon : polygons) {
             polygon.render(program);
         }

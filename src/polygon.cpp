@@ -14,26 +14,16 @@
 
 using namespace glm;
 
-/// @brief  Create a polygon with `nbSides` vertices (0, 0), (1, 0)...
-/// @param nbSides
-Polygon::Polygon(int nbSides) {
-    init(nbSides);
-    initGL();
-    log(GREEN "created" RESET ".");
-}
-
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
-/// @param a
-/// @param b
-/// @param nbSides
-Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) {
-    init(nbSides);
-    vec2 diff = b - a;
-    mat2x3 transform = mat2x3(diff.x, -diff.y, a.x, diff.y, diff.x, a.y);
-    for (int i = 0; i < nbSides; i++) {
-        points[i] = transpose(transform) * vec3(points[i], 1.0f);
-    }
+/// @param nbSides (should be greater or equal to 3)
+/// @param a defaults to (0.0, 0.0)
+/// @param b defaults to (0.0, 1.0)
+Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
+    assert(nbSides >= 3);
+    color = nextColor(50);
+    points.resize(nbSides);
     initGL();
+    positionAt(a, b);
     log(GREEN "created" RESET ".");
 }
 
@@ -64,8 +54,9 @@ Polygon& Polygon::operator=(Polygon&& other) {
     return *this;
 }
 
-/// @brief Render the polygon using `shaderProgram` and `drawingMode`
-/// @param program
+/// @brief Render the polygon using `shaderProgram` and `drawingMode`.
+/// @param shaderProgram
+/// @param drawingMode defaults to `GL_TRIANGLE_FAN`
 void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
@@ -73,27 +64,33 @@ void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
     glDrawArrays(drawingMode, 0, points.size());
 }
 
-void Polygon::init(int nbSides) {
-    assert(nbSides >= 3);
-    color = nextColor(50);
-    points.reserve(nbSides);
-    vec2 xy = vec2(-0.0f);
-    for (int i = 0; i < nbSides; i++) {
-        points.push_back(xy);
-        xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
-                   sin(2.0 * i * pi<double>() / nbSides));
+/// @brief Position the polygon so that vertices are on `a`, `b`...
+/// @param a
+/// @param b
+/// @param bufferDrawingMode defaults to `GL_STATIC_DRAW`
+void Polygon::positionAt(const vec2& a, const vec2& b,
+                         GLenum bufferDrawingMode) {
+    vec2 vertex = a;
+    vec2 firstEdge = b - a;
+    mat2 edge = mat2(firstEdge.x, -firstEdge.y, firstEdge.y, firstEdge.x);
+    for (unsigned i = 0; i < points.size(); i++) {
+        points[i] = vertex;
+        vertex +=
+            transpose(edge) * vec2(cos(2.0 * i * pi<double>() / points.size()),
+                                   sin(2.0 * i * pi<double>() / points.size()));
     }
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * points.size(),
+                 (const void*)&points[0], bufferDrawingMode);
 }
 
 void Polygon::initGL() {
     glGenBuffers(1, &vbo);
-
     glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
 
+    glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * points.size(),
-                 (const void*)&points[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
