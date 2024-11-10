@@ -15,6 +15,7 @@ class Polygon {
     void init(int nbSides);
     void initGL();
     void destroyGL(bool destroyVbo = true, bool destroyVao = true);
+    void log(const char* log) const;
 
   public:
     Polygon(int nbSides);

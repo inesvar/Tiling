@@ -27,10 +27,11 @@ bool createProgram(unsigned& program);
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);
 void processInput(GLFWwindow* window);
+void logError(const char* error);
 
 int main() {
     if (!glfwInit()) {
-        std::cout << "Failed to initialize GLFW" << std::endl;
+        logError("Failed to initialize GLFW");
         return -1;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -41,14 +42,14 @@ int main() {
                                           getWindowTitle().data(), NULL, NULL);
 
     if (!window) {
-        std::cout << "Failed to create window" << std::endl;
+        logError("Failed to create window");
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to load GLAD" << std::endl;
+        logError("Failed to load GLAD");
         return -1;
     }
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -80,6 +81,7 @@ int main() {
 
     glDeleteProgram(program);
     // delete vertex buffers and vertex arrays
+    // BEFORE GLFW is terminated
     polygons.clear();
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -114,7 +116,7 @@ bool createProgram(unsigned& program) {
 
     if (!success) {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << infoLog << std::endl;
+        logError(infoLog);
         return false;
     }
 
@@ -127,7 +129,7 @@ bool createProgram(unsigned& program) {
 
     if (!success) {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << infoLog << std::endl;
+        logError(infoLog);
         return false;
     }
 
@@ -140,7 +142,7 @@ bool createProgram(unsigned& program) {
     glGetProgramiv(program, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(program, 512, NULL, infoLog);
-        std::cout << infoLog << std::endl;
+        logError(infoLog);
         return false;
     }
 
@@ -148,3 +150,5 @@ bool createProgram(unsigned& program) {
     glDeleteShader(fragmentShader);
     return true;
 }
+
+void logError(const char* error) { std::cerr << error << std::endl; }

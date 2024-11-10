@@ -7,6 +7,11 @@
 #include <iostream>
 #include <vector>
 
+#define RED "\033[1;31m"
+#define GREEN "\033[1;32m"
+#define BLUE "\033[1;34m"
+#define RESET "\033[0m"
+
 using namespace glm;
 
 /// @brief  Create a polygon with `nbSides` vertices (0, 0), (1, 0)...
@@ -14,6 +19,7 @@ using namespace glm;
 Polygon::Polygon(int nbSides) {
     init(nbSides);
     initGL();
+    log(GREEN "created" RESET ".");
 }
 
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
@@ -29,14 +35,12 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) {
     }
     center = transpose(transform) * vec3(center, 1.0f);
     initGL();
-    std::cout << "Created Polygon with " << points.size() << " sides."
-              << std::endl;
+    log(GREEN "created" RESET ".");
 }
 
 Polygon::~Polygon() {
     destroyGL();
-    std::cout << "Deleted Polygon with " << points.size() << " sides."
-              << std::endl;
+    log(RED "deleted" RESET ".");
 }
 
 Polygon::Polygon(Polygon&& other)
@@ -45,8 +49,7 @@ Polygon::Polygon(Polygon&& other)
       vao(std::move(other.vao)) {
     other.vao = 0;
     other.vbo = 0;
-    std::cout << "Move-created Polygon with " << points.size() << " sides."
-              << std::endl;
+    log(BLUE "created using move" RESET ".");
 }
 
 Polygon& Polygon::operator=(Polygon&& other) {
@@ -60,8 +63,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
         other.vao = 0;
         other.vbo = 0;
     }
-    std::cout << "Move-assigned  Polygon with " << points.size() << " sides."
-              << std::endl;
+    log(BLUE "assigned using move" RESET ".");
     return *this;
 }
 
@@ -109,4 +111,9 @@ void Polygon::destroyGL(bool destroyVbo, bool destroyVao) {
     if (destroyVao && glIsVertexArray(vao)) {
         glDeleteVertexArrays(1, &vao);
     }
+}
+
+void Polygon::log(const char* log) const {
+    std::clog << "Polygon (" << points.size() << " sides) was " << log
+              << std::endl;
 }
