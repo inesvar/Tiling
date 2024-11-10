@@ -54,6 +54,7 @@ int main() {
     }
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSwapInterval(1);
 
     unsigned program;
     if (!createProgram(program)) {
@@ -88,7 +89,7 @@ int main() {
 }
 
 void framebufferSizeCallback(__attribute__((unused)) GLFWwindow* window,
-                             int height, int width) {
+                             int width, int height) {
     // NOTE: this probably only works with one window...
     glViewport(0, 0, width, height);
 }
