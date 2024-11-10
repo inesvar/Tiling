@@ -29,17 +29,40 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) {
     }
     center = transpose(transform) * vec3(center, 1.0f);
     initGL();
+    std::cout << "Created Polygon with " << points.size() << " sides."
+              << std::endl;
 }
 
 Polygon::~Polygon() {
+    destroyGL();
     std::cout << "Deleted Polygon with " << points.size() << " sides."
               << std::endl;
 }
 
-/// @brief Clean the associated GL vertex array and vertex buffer
-void Polygon::cleanGL() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
+Polygon::Polygon(Polygon&& other)
+    : points(std::move(other.points)), center(std::move(other.center)),
+      color(std::move(other.color)), vbo(std::move(other.vbo)),
+      vao(std::move(other.vao)) {
+    other.vao = 0;
+    other.vbo = 0;
+    std::cout << "Move-created Polygon with " << points.size() << " sides."
+              << std::endl;
+}
+
+Polygon& Polygon::operator=(Polygon&& other) {
+    if (&other != this) {
+        points = std::move(other.points);
+        center = std::move(other.center);
+        color = std::move(other.color);
+        destroyGL((vbo != other.vbo), (vao != other.vao));
+        vbo = std::move(other.vbo);
+        vao = std::move(other.vao);
+        other.vao = 0;
+        other.vbo = 0;
+    }
+    std::cout << "Move-assigned  Polygon with " << points.size() << " sides."
+              << std::endl;
+    return *this;
 }
 
 /// @brief Render the polygon using `shaderProgram` and `drawingMode`
@@ -77,4 +100,13 @@ void Polygon::initGL() {
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
+}
+
+void Polygon::destroyGL(bool destroyVbo, bool destroyVao) {
+    if (destroyVbo && glIsBuffer(vbo)) {
+        glDeleteBuffers(1, &vbo);
+    }
+    if (destroyVao && glIsVertexArray(vao)) {
+        glDeleteVertexArrays(1, &vao);
+    }
 }

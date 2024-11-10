@@ -64,8 +64,6 @@ int main() {
     glm::vec2 rightOrigin = glm::vec2(0.2f, -0.8f);
 
     std::vector<Polygon> polygons{};
-    // TODO remove after making Polygon non-copyable
-    polygons.reserve(6);
     for (int i = 8; i > 2; i--) {
         polygons.emplace_back(leftOrigin, rightOrigin, i);
     }
@@ -81,9 +79,8 @@ int main() {
     }
 
     glDeleteProgram(program);
-    for (auto& polygon : polygons) {
-        polygon.cleanGL();
-    }
+    // delete vertex buffers and vertex arrays
+    polygons.clear();
     glfwDestroyWindow(window);
     glfwTerminate();
 }

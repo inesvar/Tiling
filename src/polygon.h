@@ -14,12 +14,16 @@ class Polygon {
     unsigned vao{};
     void init(int nbSides);
     void initGL();
+    void destroyGL(bool destroyVbo = true, bool destroyVao = true);
 
   public:
     Polygon(int nbSides);
     Polygon(const glm::vec2& a, const glm::vec2& b, int nbSides);
     ~Polygon();
-    void cleanGL();
+    Polygon(const Polygon&) = delete;
+    Polygon& operator=(const Polygon&) = delete;
+    Polygon(Polygon&& other);
+    Polygon& operator=(Polygon&& other);
     void render(unsigned shaderProgram,
                 GLenum drawingMode = GL_TRIANGLE_FAN) const;
 };
