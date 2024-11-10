@@ -8,7 +8,6 @@
 
 class Polygon {
     std::vector<glm::vec2> points{};
-    glm::vec2 center{};
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};

@@ -33,7 +33,6 @@ Polygon::Polygon(const vec2& a, const vec2& b, int nbSides) {
     for (int i = 0; i < nbSides; i++) {
         points[i] = transpose(transform) * vec3(points[i], 1.0f);
     }
-    center = transpose(transform) * vec3(center, 1.0f);
     initGL();
     log(GREEN "created" RESET ".");
 }
@@ -44,9 +43,8 @@ Polygon::~Polygon() {
 }
 
 Polygon::Polygon(Polygon&& other)
-    : points(std::move(other.points)), center(std::move(other.center)),
-      color(std::move(other.color)), vbo(std::move(other.vbo)),
-      vao(std::move(other.vao)) {
+    : points(std::move(other.points)), color(std::move(other.color)),
+      vbo(std::move(other.vbo)), vao(std::move(other.vao)) {
     other.vao = 0;
     other.vbo = 0;
     log(BLUE "created using move" RESET ".");
@@ -55,7 +53,6 @@ Polygon::Polygon(Polygon&& other)
 Polygon& Polygon::operator=(Polygon&& other) {
     if (&other != this) {
         points = std::move(other.points);
-        center = std::move(other.center);
         color = std::move(other.color);
         destroyGL((vbo != other.vbo), (vao != other.vao));
         vbo = std::move(other.vbo);
@@ -86,8 +83,6 @@ void Polygon::init(int nbSides) {
         xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
                    sin(2.0 * i * pi<double>() / nbSides));
     }
-    center.x = 0.5f;
-    center.y = points[int(nbSides / 2)].y;
 }
 
 void Polygon::initGL() {
