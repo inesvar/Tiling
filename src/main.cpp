@@ -4,7 +4,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 #include <iostream>
 #include <string>
 
@@ -64,8 +63,10 @@ int main() {
     glUseProgram(program);
 
     std::vector<Polygon> polygons{};
+    polygons.reserve(6);
     for (int i = 8; i > 2; i--) {
         polygons.emplace_back(i);
+        polygons.back().debug();
     }
 
     while (!glfwWindowShouldClose(window)) {
@@ -73,8 +74,9 @@ int main() {
         processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
         for (auto& polygon : polygons) {
-            polygon.positionAt(glm::vec2(0.0),
-                               glm::vec2(cos(time) * 0.4, sin(time) * 0.4),
+            polygon.positionAt(polygon.getFirstVertex(),
+                               rotate(polygon.getFirstEdge(), 0.031415) +
+                                   polygon.getFirstVertex(),
                                GL_DYNAMIC_DRAW);
         }
         for (auto& polygon : polygons) {

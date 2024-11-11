@@ -19,7 +19,7 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     points.resize(nbSides);
     initGL();
     positionAt(a, b);
-    log(GREEN "created" RESET ".");
+    log(" was " GREEN "created" RESET ".");
 }
 
 /// @brief Render the polygon using `shaderProgram` and `drawingMode`.
@@ -38,6 +38,8 @@ void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
 /// @param bufferDrawingMode defaults to `GL_STATIC_DRAW`
 void Polygon::positionAt(const vec2& a, const vec2& b,
                          GLenum bufferDrawingMode) {
+    // NOTE contrary to the 1st implementation,
+    // this loop can't be computed in parallel
     vec2 vertex = a;
     vec2 firstEdge = b - a;
     float closingAngle = 2 * pi<double>() / points.size();
@@ -52,9 +54,12 @@ void Polygon::positionAt(const vec2& a, const vec2& b,
                  (const void*)&points[0], bufferDrawingMode);
 }
 
+vec2 Polygon::getFirstVertex() const { return points[0]; }
+vec2 Polygon::getFirstEdge() const { return points[1] - points[0]; }
+
 Polygon::~Polygon() {
     destroyGL();
-    log(RED "deleted" RESET ".");
+    log(" was " RED "deleted" RESET ".");
 }
 
 Polygon::Polygon(Polygon&& other)
@@ -62,7 +67,7 @@ Polygon::Polygon(Polygon&& other)
       vbo(std::move(other.vbo)), vao(std::move(other.vao)) {
     other.vao = 0;
     other.vbo = 0;
-    log(BLUE "created using move" RESET ".");
+    log(" was " BLUE "created using move" RESET ".");
 }
 
 Polygon& Polygon::operator=(Polygon&& other) {
@@ -75,7 +80,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
         other.vao = 0;
         other.vbo = 0;
     }
-    log(BLUE "assigned using move" RESET ".");
+    log(" was " BLUE "assigned using move" RESET ".");
     return *this;
 }
 
@@ -100,6 +105,13 @@ void Polygon::destroyGL(bool destroyVbo, bool destroyVao) {
 }
 
 void Polygon::log(const char* log) const {
-    std::clog << "Polygon (" << points.size() << " sides) was " << log
-              << std::endl;
+    std::clog << "Polygon (" << points.size() << " sides)" << log << std::endl;
+}
+
+void Polygon::debug() const {
+    log(":");
+    for (auto point : points) {
+        std::clog << "(" << point.x << ", " << point.y << ") ";
+    }
+    std::clog << std::endl;
 }

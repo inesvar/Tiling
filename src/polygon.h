@@ -29,6 +29,9 @@ class Polygon {
                     GLenum bufferDrawingMode = GL_STATIC_DRAW);
     void render(unsigned shaderProgram,
                 GLenum drawingMode = GL_TRIANGLE_FAN) const;
+    glm::vec2 getFirstVertex() const;
+    glm::vec2 getFirstEdge() const;
+    void debug() const;
 };
 
 #endif /* POLYGON_H */
