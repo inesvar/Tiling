@@ -1,16 +1,11 @@
 #include "polygon.h"
-#include "color.h"
+#include "utils.h"
 #include <cassert>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
-
-#define RED "\033[1;31m"
-#define GREEN "\033[1;32m"
-#define BLUE "\033[1;34m"
-#define RESET "\033[0m"
 
 using namespace glm;
 
@@ -45,13 +40,11 @@ void Polygon::positionAt(const vec2& a, const vec2& b,
                          GLenum bufferDrawingMode) {
     vec2 vertex = a;
     vec2 firstEdge = b - a;
-    mat2 edge = mat2(firstEdge.x, -firstEdge.y, firstEdge.y, firstEdge.x);
+    float closingAngle = 2 * pi<double>() / points.size();
 
-    for (unsigned i = 0; i < points.size(); i++) {
-        points[i] = vertex;
-        vertex +=
-            transpose(edge) * vec2(cos(2.0 * i * pi<double>() / points.size()),
-                                   sin(2.0 * i * pi<double>() / points.size()));
+    for (unsigned n = 0; n < points.size(); n++) {
+        points[n] = vertex;
+        vertex += rotate(firstEdge, n * closingAngle);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);

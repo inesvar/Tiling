@@ -1,8 +1,9 @@
 #include "config.h"
 #include "polygon.h"
-#include <glad/glad.h>
+#include "utils.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <iostream>
 #include <string>
@@ -28,7 +29,6 @@ bool createProgram(unsigned& program);
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);
 void processInput(GLFWwindow* window);
-void logError(const char* error);
 
 int main() {
     if (!glfwInit()) {
@@ -155,5 +155,3 @@ bool createProgram(unsigned& program) {
     glDeleteShader(fragmentShader);
     return true;
 }
-
-void logError(const char* error) { std::cerr << error << std::endl; }
