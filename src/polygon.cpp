@@ -12,7 +12,7 @@ using namespace glm;
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
 /// @param nbSides (should be greater or equal to 3)
 /// @param a defaults to (0.0, 0.0)
-/// @param b defaults to (0.0, 1.0)
+/// @param b defaults to (1.0, 0.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     color = nextColor(50);
     initPoints(nbSides);
@@ -44,8 +44,8 @@ void Polygon::positionAt(const vec2& a, const vec2& b) {
     position = mat3x2(diff.x, diff.y, -diff.y, diff.x, a.x, a.y);
     // This transformation is :
     // scaling so that diff is a unit vector,
-    // rotating so that diff is (0, 1),
-    // and then translating so that a is (0, 0).
+    // rotating so that diff is (1.0, 0.0),
+    // and then translating so that a is (0.0, 0.0).
 }
 
 vec2 Polygon::getFirstVertex() const { return position[2]; }
