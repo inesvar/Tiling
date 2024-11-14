@@ -16,6 +16,7 @@ using namespace glm;
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     color = nextColor(50);
     initPoints(nbSides);
+    neighbors.resize(nbSides);
     initGL();
     positionAt(a, b);
     log(" was " GREEN "created" RESET ".");
@@ -59,7 +60,8 @@ Polygon::~Polygon() {
 Polygon::Polygon(Polygon&& other)
     : nbSides(other.nbSides), points(std::move(other.points)),
       position(std::move(other.position)), color(std::move(other.color)),
-      vbo(std::move(other.vbo)), vao(std::move(other.vao)) {
+      vbo(std::move(other.vbo)), vao(std::move(other.vao)),
+      neighbors(std::move(other.neighbors)) {
     other.vao = 0;
     other.vbo = 0;
     log(" was " BLUE "created using move" RESET ".");
@@ -76,6 +78,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
         vao = std::move(other.vao);
         other.vao = 0;
         other.vbo = 0;
+        neighbors = std::move(other.neighbors);
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;

@@ -5,6 +5,7 @@
 #include <glm/mat3x2.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <memory>
 #include <vector>
 
 /// @brief Colored polygon with associated OpenGL VBO and VAO.
@@ -16,6 +17,7 @@ class Polygon {
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};
+    std::vector<std::weak_ptr<Polygon>> neighbors{};
     void initPoints(int nbSides);
     void initGL();
     void destroyGL(bool destroyVbo = true, bool destroyVao = true);
