@@ -10,6 +10,7 @@
 /// @brief Colored polygon with associated OpenGL VBO and VAO.
 /// Non-copyable.
 class Polygon {
+    int nbSides;
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
     glm::vec3 color{};

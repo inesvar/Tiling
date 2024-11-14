@@ -31,9 +31,9 @@ void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
     int positionUniform = glGetUniformLocation(shaderProgram, "position");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);
-    glDrawArrays(drawingMode, 0, points.size());
+    glDrawArrays(drawingMode, 0, nbSides);
     glUniform3f(colorUniform, 0.0, 0.0, 0.0);
-    glDrawArrays(GL_LINE_LOOP, 0, points.size());
+    glDrawArrays(GL_LINE_LOOP, 0, nbSides);
 }
 
 /// @brief Position the polygon so that vertices are on `a`, `b`...
@@ -57,9 +57,9 @@ Polygon::~Polygon() {
 }
 
 Polygon::Polygon(Polygon&& other)
-    : points(std::move(other.points)), position(std::move(other.position)),
-      color(std::move(other.color)), vbo(std::move(other.vbo)),
-      vao(std::move(other.vao)) {
+    : nbSides(other.nbSides), points(std::move(other.points)),
+      position(std::move(other.position)), color(std::move(other.color)),
+      vbo(std::move(other.vbo)), vao(std::move(other.vao)) {
     other.vao = 0;
     other.vbo = 0;
     log(" was " BLUE "created using move" RESET ".");
@@ -67,6 +67,7 @@ Polygon::Polygon(Polygon&& other)
 
 Polygon& Polygon::operator=(Polygon&& other) {
     if (&other != this) {
+        nbSides = other.nbSides;
         points = std::move(other.points);
         position = std::move(other.position);
         color = std::move(other.color);
@@ -82,13 +83,17 @@ Polygon& Polygon::operator=(Polygon&& other) {
 
 void Polygon::initPoints(int nbSides) {
     assert(nbSides >= 3 && nbSides <= 8);
-    points.resize(nbSides);
+    this->nbSides = nbSides;
+    points.resize(nbSides + 1);
     vec2 xy = vec2(-0.0f);
     float closingAngle = 2.0 * pi<double>() / nbSides;
-    for (int n = 0; n < nbSides; n++) {
+    for (int n = 0; n <= nbSides; n++) {
         points[n] = xy;
         xy += rotate(n * closingAngle);
     }
+    // Vertex 0 is duplicated at the end of `points`
+    // so that the last edge can be fetched like the others
+    // (otherwise the two vec2 wouldn't be contiguous).
 }
 
 void Polygon::initGL() {
@@ -97,7 +102,7 @@ void Polygon::initGL() {
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * points.size(),
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * nbSides,
                  (const void*)&points[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -114,7 +119,7 @@ void Polygon::destroyGL(bool destroyVbo, bool destroyVao) {
 }
 
 void Polygon::log(const char* log) const {
-    std::clog << "Polygon (" << points.size() << " sides)" << log << std::endl;
+    std::clog << "Polygon (" << nbSides << " sides)" << log << std::endl;
 }
 
 void Polygon::debug() const {
