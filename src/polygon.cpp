@@ -14,9 +14,8 @@ using namespace glm;
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (0.0, 1.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
-    assert(nbSides >= 3);
     color = nextColor(50);
-    points.resize(nbSides);
+    initPoints(nbSides);
     initGL();
     positionAt(a, b);
     log(" was " GREEN "created" RESET ".");
@@ -29,6 +28,8 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
 void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
+    int positionUniform = glGetUniformLocation(shaderProgram, "position");
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);
     glDrawArrays(drawingMode, 0, points.size());
     glUniform3f(colorUniform, 0.0, 0.0, 0.0);
@@ -38,27 +39,17 @@ void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
 /// @brief Position the polygon so that vertices are on `a`, `b`...
 /// @param a
 /// @param b
-/// @param bufferDrawingMode defaults to `GL_STATIC_DRAW`
-void Polygon::positionAt(const vec2& a, const vec2& b,
-                         GLenum bufferDrawingMode) {
-    // NOTE contrary to the 1st implementation,
-    // this loop can't be computed in parallel
-    vec2 vertex = a;
-    vec2 firstEdge = b - a;
-    float closingAngle = 2 * pi<double>() / points.size();
-
-    for (unsigned n = 0; n < points.size(); n++) {
-        points[n] = vertex;
-        vertex += rotate(firstEdge, n * closingAngle);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * points.size(),
-                 (const void*)&points[0], bufferDrawingMode);
+void Polygon::positionAt(const vec2& a, const vec2& b) {
+    vec2 diff = b - a;
+    position = mat3x2(diff.x, diff.y, -diff.y, diff.x, a.x, a.y);
+    // This transformation is :
+    // scaling so that diff is a unit vector,
+    // rotating so that diff is (0, 1),
+    // and then translating so that a is (0, 0).
 }
 
-vec2 Polygon::getFirstVertex() const { return points[0]; }
-vec2 Polygon::getFirstEdge() const { return points[1] - points[0]; }
+vec2 Polygon::getFirstVertex() const { return position[2]; }
+vec2 Polygon::getFirstEdge() const { return position[0] + position[2]; }
 
 Polygon::~Polygon() {
     destroyGL();
@@ -66,8 +57,9 @@ Polygon::~Polygon() {
 }
 
 Polygon::Polygon(Polygon&& other)
-    : points(std::move(other.points)), color(std::move(other.color)),
-      vbo(std::move(other.vbo)), vao(std::move(other.vao)) {
+    : points(std::move(other.points)), position(std::move(other.position)),
+      color(std::move(other.color)), vbo(std::move(other.vbo)),
+      vao(std::move(other.vao)) {
     other.vao = 0;
     other.vbo = 0;
     log(" was " BLUE "created using move" RESET ".");
@@ -76,6 +68,7 @@ Polygon::Polygon(Polygon&& other)
 Polygon& Polygon::operator=(Polygon&& other) {
     if (&other != this) {
         points = std::move(other.points);
+        position = std::move(other.position);
         color = std::move(other.color);
         destroyGL((vbo != other.vbo), (vao != other.vao));
         vbo = std::move(other.vbo);
@@ -87,12 +80,26 @@ Polygon& Polygon::operator=(Polygon&& other) {
     return *this;
 }
 
+void Polygon::initPoints(int nbSides) {
+    assert(nbSides >= 3);
+    points.resize(nbSides);
+    vec2 xy = vec2(-0.0f);
+    for (int i = 0; i < nbSides; i++) {
+        points[i] = xy;
+        // TODO use rotate
+        xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
+                   sin(2.0 * i * pi<double>() / nbSides));
+    }
+}
+
 void Polygon::initGL() {
     glGenBuffers(1, &vbo);
     glGenVertexArrays(1, &vao);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points[0]) * points.size(),
+                 (const void*)&points[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);

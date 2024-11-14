@@ -2,6 +2,7 @@
 #define POLYGON_H
 
 #include <glad/glad.h>
+#include <glm/mat3x2.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
@@ -10,9 +11,11 @@
 /// Non-copyable.
 class Polygon {
     std::vector<glm::vec2> points{};
+    glm::mat3x2 position{};
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};
+    void initPoints(int nbSides);
     void initGL();
     void destroyGL(bool destroyVbo = true, bool destroyVao = true);
     void log(const char* log) const;
@@ -25,8 +28,7 @@ class Polygon {
     Polygon& operator=(const Polygon&) = delete;
     Polygon(Polygon&& other);
     Polygon& operator=(Polygon&& other);
-    void positionAt(const glm::vec2& a, const glm::vec2& b,
-                    GLenum bufferDrawingMode = GL_STATIC_DRAW);
+    void positionAt(const glm::vec2& a, const glm::vec2& b);
     void render(unsigned shaderProgram,
                 GLenum drawingMode = GL_TRIANGLE_FAN) const;
     glm::vec2 getFirstVertex() const;

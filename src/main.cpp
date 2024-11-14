@@ -12,9 +12,11 @@ const int WINDOW_HEIGHT = 600;
 
 const char* minimalVertexShader =
     "#version 330 core\n"
-    "layout (location = 0) in vec2 pos;"
+    "layout (location = 0) in vec2 points;\n"
     "// location is the id of the vertex attribute\n"
+    "uniform mat3x2 position;\n"
     "void main() {\n"
+    "    vec2 pos = position * vec3(points, 1.0);\n"
     "    gl_Position = vec4(pos, 0.0, 1.0);\n"
     "}\n";
 
@@ -77,8 +79,7 @@ int main() {
         for (auto& polygon : polygons) {
             polygon.positionAt(polygon.getFirstVertex(),
                                rotate(polygon.getFirstEdge(), 0.031415) +
-                                   polygon.getFirstVertex(),
-                               GL_DYNAMIC_DRAW);
+                                   polygon.getFirstVertex());
         }
         for (auto& polygon : polygons) {
             polygon.render(program);
