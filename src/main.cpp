@@ -78,7 +78,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
         for (auto& polygon : polygons) {
             polygon.positionAt(polygon.getFirstVertex(),
-                               rotate(polygon.getFirstEdge(), 0.031415) +
+                               rotate(0.031415, polygon.getFirstEdge()) +
                                    polygon.getFirstVertex());
         }
         for (auto& polygon : polygons) {

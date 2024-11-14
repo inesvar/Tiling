@@ -6,9 +6,9 @@
 using namespace glm;
 
 /// @brief Rotate `point` by `radianAngle` around `(0, 0)`.
-/// @param point
 /// @param radianAngle
-vec2 rotate(const vec2& point, float radianAngle) {
+/// @param point defaults to (0, 1)
+vec2 rotate(float radianAngle, const vec2& point) {
     // compute the complex multiplication of
     // `point` and $e^{radianAngle * i}$
     mat2 edge = mat2(point.x, -point.y, point.y, point.x);
@@ -31,7 +31,7 @@ vec3 nextColor(float hueStep) {
 }
 
 /// @brief Print `error` in red to the cerr buffer.
-/// @param error 
+/// @param error
 void logError(const char* error) {
     std::cerr << RED << error << RESET << std::endl;
 }

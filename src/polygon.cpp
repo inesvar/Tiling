@@ -10,7 +10,7 @@
 using namespace glm;
 
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
-/// @param nbSides (should be greater or equal to 3)
+/// @param nbSides (should be between 3 and 8 included)
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (1.0, 0.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
@@ -81,14 +81,13 @@ Polygon& Polygon::operator=(Polygon&& other) {
 }
 
 void Polygon::initPoints(int nbSides) {
-    assert(nbSides >= 3);
+    assert(nbSides >= 3 && nbSides <= 8);
     points.resize(nbSides);
     vec2 xy = vec2(-0.0f);
-    for (int i = 0; i < nbSides; i++) {
-        points[i] = xy;
-        // TODO use rotate
-        xy += vec2(cos(2.0 * i * pi<double>() / nbSides),
-                   sin(2.0 * i * pi<double>() / nbSides));
+    float closingAngle = 2.0 * pi<double>() / nbSides;
+    for (int n = 0; n < nbSides; n++) {
+        points[n] = xy;
+        xy += rotate(n * closingAngle);
     }
 }
 

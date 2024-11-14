@@ -8,7 +8,8 @@
 #define BLUE "\033[1;34m"
 #define RESET "\033[0m"
 
-glm::vec2 rotate(const glm::vec2& vector, float radianAngle);
+glm::vec2 rotate(float radianAngle,
+                 const glm::vec2& vector = glm::vec2(1.0, 0.0));
 glm::vec3 nextColor(float hueStep = 30);
 void logError(const char* error);
 
