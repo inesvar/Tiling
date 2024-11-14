@@ -60,6 +60,7 @@ int main() {
     if (!createProgram(program)) {
         return -1;
     }
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glUseProgram(program);
 
     std::vector<Polygon> polygons{};

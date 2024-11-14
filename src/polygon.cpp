@@ -22,7 +22,8 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     log(" was " GREEN "created" RESET ".");
 }
 
-/// @brief Render the polygon using `shaderProgram` and `drawingMode`.
+/// @brief Render the polygon using `shaderProgram` and `drawingMode`, then
+/// using `shaderProgram` and `GL_LINE_LOOP`.
 /// @param shaderProgram
 /// @param drawingMode defaults to `GL_TRIANGLE_FAN`
 void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
@@ -30,6 +31,8 @@ void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
     glUniform3fv(colorUniform, 1, value_ptr(color));
     glBindVertexArray(vao);
     glDrawArrays(drawingMode, 0, points.size());
+    glUniform3f(colorUniform, 0.0, 0.0, 0.0);
+    glDrawArrays(GL_LINE_LOOP, 0, points.size());
 }
 
 /// @brief Position the polygon so that vertices are on `a`, `b`...
