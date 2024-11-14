@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <memory>
 #include <string>
 
 const int WINDOW_WIDTH = 600;
@@ -65,11 +66,13 @@ int main() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glUseProgram(program);
 
-    std::vector<Polygon> polygons{};
+    std::vector<std::shared_ptr<Polygon>> polygons{};
     polygons.reserve(6);
-    for (int i = 8; i > 2; i--) {
-        polygons.emplace_back(i);
-        polygons.back().debug();
+    polygons.emplace_back(new Polygon(3));
+    polygons.back()->debug();
+    for (int i = 0; i < 5; i++) {
+        polygons.emplace_back(new Polygon(3 + i % 2, polygons.back()));
+        polygons.back()->debug();
     }
 
     while (!glfwWindowShouldClose(window)) {
@@ -77,12 +80,12 @@ int main() {
         processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
         for (auto& polygon : polygons) {
-            polygon.positionAt(polygon.getFirstVertex(),
-                               rotate(0.031415, polygon.getFirstEdge()) +
-                                   polygon.getFirstVertex());
+            polygon->positionAt(polygon->getFirstVertex(),
+                                rotate(0.031415, polygon->getFirstEdge()) +
+                                    polygon->getFirstVertex());
         }
         for (auto& polygon : polygons) {
-            polygon.render(program);
+            polygon->render(program);
         }
         glfwSwapBuffers(window);
         glfwPollEvents();

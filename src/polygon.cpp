@@ -1,6 +1,7 @@
 #include "polygon.h"
 #include "utils.h"
 #include <cassert>
+#include <exception>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,6 +20,35 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     neighbors.resize(nbSides);
     initGL();
     positionAt(a, b);
+    log(" was " GREEN "created" RESET ".");
+}
+
+/// @brief Create a polygon with `nbSides` edges starting with edge `edge` on
+/// `other`.
+/// @param nbSides (should be between 3 and 8 included)
+/// @param other
+/// @param edge defaults to 0
+Polygon::Polygon(int nbSides, std::shared_ptr<Polygon> other, int edge) {
+    color = nextColor(50);
+    initPoints(nbSides);
+    neighbors.resize(nbSides);
+    initGL();
+    /* try {
+        neighbors[0] = other;
+    } catch (const std::exception& e) {
+        std::cout << "ba" << std::endl;
+    }
+    try {
+        std::cout << other->neighbors.size() << std::endl;
+        other->neighbors[edge] = shared_from_this();
+    } catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    } */
+    if (edge == 0) {
+        edge = other->nbSides;
+    }
+    positionAt(other->position * vec3(other->points[edge], 1.0),
+               other->position * vec3(other->points[edge - 1], 1.0));
     log(" was " GREEN "created" RESET ".");
 }
 
