@@ -120,8 +120,7 @@ void Polygon::log(const char* log) const {
 
 void Polygon::debug() const {
     log(":");
-    for (auto point : points) {
-        std::clog << "(" << point.x << ", " << point.y << ") ";
-    }
-    std::clog << std::endl;
+    std::clog << "Position: " << position[2].x << ", " << position[2].y
+              << "; Vector: " << position[0].x << ", " << position[0].y
+              << std::endl;
 }
