@@ -75,6 +75,22 @@ void Polygon::positionAt(const vec2& a, const vec2& b) {
 vec2 Polygon::getFirstVertex() const { return position[2]; }
 vec2 Polygon::getFirstEdge() const { return position[0] + position[2]; }
 
+void Polygon::debug() const {
+    log(":");
+    std::clog << "Position: " << position[2].x << ", " << position[2].y
+              << "; Vector: " << position[0].x << ", " << position[0].y
+              << std::endl;
+    std::clog << "Neighbors:" << std::endl;
+    for (auto& neighbor : neighbors) {
+        if (neighbor.lock() == nullptr) {
+            std::clog << "nullptr" << std::endl;
+        } else {
+            neighbor.lock()->log("");
+        }
+    }
+    std::clog << std::endl;
+}
+
 Polygon::~Polygon() {
     destroyGL();
     log(" was " RED "deleted" RESET ".");
@@ -146,20 +162,4 @@ void Polygon::destroyGL(const bool destroyVbo, const bool destroyVao) {
 
 void Polygon::log(const char* log) const {
     std::clog << "Polygon (" << nbSides << " sides)" << log << std::endl;
-}
-
-void Polygon::debug() const {
-    log(":");
-    std::clog << "Position: " << position[2].x << ", " << position[2].y
-              << "; Vector: " << position[0].x << ", " << position[0].y
-              << std::endl;
-    std::clog << "Neighbors:" << std::endl;
-    for (auto& neighbor : neighbors) {
-        if (neighbor.lock() == nullptr) {
-            std::clog << "nullptr" << std::endl;
-        } else {
-            neighbor.lock()->log("");
-        }
-    }
-    std::clog << std::endl;
 }
