@@ -20,7 +20,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     std::vector<std::weak_ptr<Polygon>> neighbors{};
     void initPoints(int nbSides);
     void initGL();
-    void destroyGL(bool destroyVbo = true, bool destroyVao = true);
+    void destroyGL(const bool destroyVbo = true, const bool destroyVao = true);
     void log(const char* log) const;
 
   public:
@@ -32,9 +32,9 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     Polygon(Polygon&& other);
     Polygon& operator=(Polygon&& other);
     void positionAt(const glm::vec2& a, const glm::vec2& b);
-    void render(unsigned shaderProgram,
-                GLenum drawingMode = GL_TRIANGLE_FAN) const;
-    bool bindTo(std::shared_ptr<Polygon> other, int edge = 0);
+    void render(const unsigned shaderProgram,
+                const GLenum drawingMode = GL_TRIANGLE_FAN) const;
+    bool bindTo(const std::shared_ptr<Polygon> other, int edge = 0);
     glm::vec2 getFirstVertex() const;
     glm::vec2 getFirstEdge() const;
     void debug() const;

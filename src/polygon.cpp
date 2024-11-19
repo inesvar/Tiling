@@ -26,7 +26,7 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
 /// @brief Bind polygon to edge `edge` on `other`.
 /// @param other
 /// @param edge defaults to 0
-bool Polygon::bindTo(std::shared_ptr<Polygon> other, int edge) {
+bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
     bool success = true;
     if (edge == 0) {
         edge = other->nbSides;
@@ -48,7 +48,8 @@ bool Polygon::bindTo(std::shared_ptr<Polygon> other, int edge) {
 /// using `shaderProgram` and `GL_LINE_LOOP`.
 /// @param shaderProgram
 /// @param drawingMode defaults to `GL_TRIANGLE_FAN`
-void Polygon::render(unsigned shaderProgram, GLenum drawingMode) const {
+void Polygon::render(const unsigned shaderProgram,
+                     const GLenum drawingMode) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
     int positionUniform = glGetUniformLocation(shaderProgram, "position");
@@ -134,7 +135,7 @@ void Polygon::initGL() {
     glEnableVertexAttribArray(0);
 }
 
-void Polygon::destroyGL(bool destroyVbo, bool destroyVao) {
+void Polygon::destroyGL(const bool destroyVbo, const bool destroyVao) {
     if (destroyVbo && glIsBuffer(vbo)) {
         glDeleteBuffers(1, &vbo);
     }
