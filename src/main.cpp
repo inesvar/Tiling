@@ -30,7 +30,8 @@ const char* minimalFragmentShader = "#version 330 core\n"
 bool createProgram(unsigned& program);
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);
-void processInput(GLFWwindow* window);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action,
+                 int mods);
 
 int main() {
     if (!glfwInit()) {
@@ -67,19 +68,21 @@ int main() {
     glUseProgram(program);
 
     std::vector<std::shared_ptr<Polygon>> polygons{};
+    glfwSetWindowUserPointer(window, &polygons);
     polygons.reserve(6);
     polygons.emplace_back(new Polygon(3));
     for (int i = 0; i < 4; i++) {
         polygons.emplace_back(new Polygon(3 + i % 2));
         polygons.back()->bindTo(polygons[i]);
     }
-    for (auto &polygon : polygons) {
+    for (auto& polygon : polygons) {
         polygon->debug();
     }
 
+    glfwSetKeyCallback(window, keyCallback);
+
     while (!glfwWindowShouldClose(window)) {
         double time = glfwGetTime();
-        processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
         /* for (auto& polygon : polygons) {
             polygon->positionAt(polygon->getFirstVertex(),
@@ -107,9 +110,40 @@ void framebufferSizeCallback(__attribute__((unused)) GLFWwindow* window,
     glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+void keyCallback(GLFWwindow* window, int key, int scancode, int action,
+                 int mods) {
+    static std::array<bool, 6> pressedPreviously{};
+
+    void* ptr = glfwGetWindowUserPointer(window);
+    auto* polygons = static_cast<std::vector<std::shared_ptr<Polygon>>*>(ptr);
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    } else if (key == GLFW_KEY_3) {
+        if (action == GLFW_PRESS && !pressedPreviously[0])
+            polygons->emplace_back(new Polygon(3));
+        pressedPreviously[0] = action;
+    } else if (key == GLFW_KEY_4) {
+        if (action == GLFW_PRESS && !pressedPreviously[1])
+            polygons->emplace_back(new Polygon(4));
+        pressedPreviously[0] = action;
+    } else if (key == GLFW_KEY_5) {
+        if (action == GLFW_PRESS && !pressedPreviously[2])
+            polygons->emplace_back(new Polygon(5));
+        pressedPreviously[0] = action;
+    } else if (key == GLFW_KEY_6) {
+        if (action == GLFW_PRESS && !pressedPreviously[3])
+            polygons->emplace_back(new Polygon(6));
+        pressedPreviously[0] = action;
+    } else if (key == GLFW_KEY_7) {
+        if (action == GLFW_PRESS && !pressedPreviously[4])
+            polygons->emplace_back(new Polygon(7));
+        pressedPreviously[0] = action;
+    } else if (key == GLFW_KEY_8) {
+        if (action == GLFW_PRESS && !pressedPreviously[5])
+            polygons->emplace_back(new Polygon(8));
+        pressedPreviously[0] = action;
+    }
 }
 
 std::string getWindowTitle() {
