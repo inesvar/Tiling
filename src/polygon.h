@@ -11,6 +11,7 @@
 /// @brief Colored polygon with associated OpenGL VBO and VAO.
 /// Non-copyable.
 class Polygon : public std::enable_shared_from_this<Polygon> {
+    // NOTE nbSides can change during move assignment
     int nbSides;
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
