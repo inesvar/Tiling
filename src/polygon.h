@@ -10,7 +10,7 @@
 
 /// @brief Colored polygon with associated OpenGL VBO and VAO.
 /// Non-copyable.
-class Polygon /* : public std::enable_shared_from_this<Polygon> */ {
+class Polygon : public std::enable_shared_from_this<Polygon> {
     int nbSides;
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
@@ -26,7 +26,6 @@ class Polygon /* : public std::enable_shared_from_this<Polygon> */ {
   public:
     Polygon(int nbSides, const glm::vec2& a = glm::vec2(0.0),
             const glm::vec2& b = glm::vec2(0.4, 0.0));
-    Polygon(int nbSides, std::shared_ptr<Polygon> other, int edge = 0);
     ~Polygon();
     Polygon(const Polygon&) = delete;
     Polygon& operator=(const Polygon&) = delete;
@@ -35,6 +34,7 @@ class Polygon /* : public std::enable_shared_from_this<Polygon> */ {
     void positionAt(const glm::vec2& a, const glm::vec2& b);
     void render(unsigned shaderProgram,
                 GLenum drawingMode = GL_TRIANGLE_FAN) const;
+    bool bindTo(std::shared_ptr<Polygon> other, int edge = 0);
     glm::vec2 getFirstVertex() const;
     glm::vec2 getFirstEdge() const;
     void debug() const;

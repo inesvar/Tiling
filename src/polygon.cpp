@@ -23,33 +23,25 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     log(" was " GREEN "created" RESET ".");
 }
 
-/// @brief Create a polygon with `nbSides` edges starting with edge `edge` on
-/// `other`.
-/// @param nbSides (should be between 3 and 8 included)
+/// @brief Bind polygon to edge `edge` on `other`.
 /// @param other
 /// @param edge defaults to 0
-Polygon::Polygon(int nbSides, std::shared_ptr<Polygon> other, int edge) {
-    color = nextColor(50);
-    initPoints(nbSides);
-    neighbors.resize(nbSides);
-    initGL();
-    /* try {
-        neighbors[0] = other;
-    } catch (const std::exception& e) {
-        std::cout << "ba" << std::endl;
-    }
-    try {
-        std::cout << other->neighbors.size() << std::endl;
-        other->neighbors[edge] = shared_from_this();
-    } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
-    } */
+bool Polygon::bindTo(std::shared_ptr<Polygon> other, int edge) {
+    bool success = true;
     if (edge == 0) {
         edge = other->nbSides;
     }
+    try {
+        other->neighbors[edge - 1] = shared_from_this();
+    } catch (const std::exception& e) {
+        logError(e.what());
+        success = false;
+    }
+    neighbors[0] = other;
     positionAt(other->position * vec3(other->points[edge], 1.0),
                other->position * vec3(other->points[edge - 1], 1.0));
-    log(" was " GREEN "created" RESET ".");
+    log(" was " YELLOW "bound" RESET ".");
+    return success;
 }
 
 /// @brief Render the polygon using `shaderProgram` and `drawingMode`, then
@@ -160,4 +152,13 @@ void Polygon::debug() const {
     std::clog << "Position: " << position[2].x << ", " << position[2].y
               << "; Vector: " << position[0].x << ", " << position[0].y
               << std::endl;
+    std::clog << "Neighbors:" << std::endl;
+    for (auto& neighbor : neighbors) {
+        if (neighbor.lock() == nullptr) {
+            std::clog << "nullptr" << std::endl;
+        } else {
+            neighbor.lock()->log("");
+        }
+    }
+    std::clog << std::endl;
 }

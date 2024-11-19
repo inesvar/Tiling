@@ -69,21 +69,23 @@ int main() {
     std::vector<std::shared_ptr<Polygon>> polygons{};
     polygons.reserve(6);
     polygons.emplace_back(new Polygon(3));
-    polygons.back()->debug();
-    for (int i = 0; i < 5; i++) {
-        polygons.emplace_back(new Polygon(3 + i % 2, polygons.back()));
-        polygons.back()->debug();
+    for (int i = 0; i < 4; i++) {
+        polygons.emplace_back(new Polygon(3 + i % 2));
+        polygons.back()->bindTo(polygons[i]);
+    }
+    for (auto &polygon : polygons) {
+        polygon->debug();
     }
 
     while (!glfwWindowShouldClose(window)) {
         double time = glfwGetTime();
         processInput(window);
         glClear(GL_COLOR_BUFFER_BIT);
-        for (auto& polygon : polygons) {
+        /* for (auto& polygon : polygons) {
             polygon->positionAt(polygon->getFirstVertex(),
                                 rotate(0.031415, polygon->getFirstEdge()) +
                                     polygon->getFirstVertex());
-        }
+        } */
         for (auto& polygon : polygons) {
             polygon->render(program);
         }
