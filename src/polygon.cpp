@@ -87,6 +87,7 @@ void Polygon::positionAt(const vec2& a, const vec2& b) {
 vec2 Polygon::getFirstVertex() const { return position[2]; }
 vec2 Polygon::getFirstEdge() const { return position[0] + position[2]; }
 
+// TODO make verbose version
 void Polygon::debug() const {
     log(":");
     std::clog << "Position: " << position[2].x << ", " << position[2].y

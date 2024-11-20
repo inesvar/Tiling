@@ -1,9 +1,11 @@
 #ifndef TILING_APP_H
 #define TILING_APP_H
 
+#include "edge.h"
 #include "polygon.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <list>
 #include <memory>
 #include <vector>
 
@@ -13,6 +15,7 @@ class TilingApp {
     std::vector<std::shared_ptr<Polygon>> polygons{};
     unsigned shaderProgram{};
     GLFWwindow* window{};
+    std::list<Edge> edges{};
 
     void log(const char* log) const;
     void initGlfwKeyCallback();

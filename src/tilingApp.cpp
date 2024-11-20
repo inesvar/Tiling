@@ -1,4 +1,5 @@
 #include "tilingApp.h"
+#include "edge.h"
 #include "program.h"
 #include "utils.h"
 #include <cassert>
@@ -21,7 +22,7 @@ TilingApp::~TilingApp() {
 
 TilingApp::TilingApp(TilingApp&& other)
     : polygons(std::move(other.polygons)), shaderProgram(other.shaderProgram),
-      window(std::move(other.window)) {
+      window(std::move(other.window)), edges(std::move(other.edges)) {
     other.shaderProgram = 0;
     initGlfwKeyCallback();
     log(" was " BLUE "created using move" RESET ".");
@@ -34,6 +35,7 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
         shaderProgram = other.shaderProgram;
         other.shaderProgram = 0;
         window = std::move(other.window);
+        edges = std::move(other.edges);
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
@@ -41,11 +43,17 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
 
 void TilingApp::addPolygon(int nbSides) {
     polygons.emplace_back(new Polygon(nbSides));
+    for (int i = 0; i < nbSides; i++) {
+        edges.emplace_back(polygons.back(), i);
+    }
 }
 
 void TilingApp::addPolygon(int nbSides, unsigned polygonToBindTo) {
     polygons.emplace_back(new Polygon(nbSides));
     polygons.back()->bindTo(polygons[polygonToBindTo]);
+    for (int i = 0; i < nbSides; i++) {
+        edges.emplace_back(polygons.back(), i);
+    }
 }
 
 void TilingApp::debug() const {
@@ -67,7 +75,7 @@ void TilingApp::render() const {
     for (auto& polygon : polygons) {
         polygon->render(shaderProgram);
     }
-    polygons[0]->highlightEdge(shaderProgram, 0);
+    edges.front().render(shaderProgram);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
