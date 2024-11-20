@@ -89,36 +89,35 @@ void TilingApp::initGlfwKeyCallback() {
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action,
                  int mods) {
-    static std::array<bool, 6> pressedPreviously{};
+
+    if (action != GLFW_PRESS) {
+        return;
+    }
 
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);
 
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    } else if (key == GLFW_KEY_3) {
-        if (action == GLFW_PRESS && !pressedPreviously[0])
+    switch (key) {
+        case GLFW_KEY_ESCAPE:
+            glfwSetWindowShouldClose(window, true);
+            break;
+        case GLFW_KEY_3:
             app->addPolygon(3);
-        pressedPreviously[0] = action;
-    } else if (key == GLFW_KEY_4) {
-        if (action == GLFW_PRESS && !pressedPreviously[1])
+            break;
+        case GLFW_KEY_4:
             app->addPolygon(4);
-        pressedPreviously[0] = action;
-    } else if (key == GLFW_KEY_5) {
-        if (action == GLFW_PRESS && !pressedPreviously[2])
+            break;
+        case GLFW_KEY_5:
             app->addPolygon(5);
-        pressedPreviously[0] = action;
-    } else if (key == GLFW_KEY_6) {
-        if (action == GLFW_PRESS && !pressedPreviously[3])
+            break;
+        case GLFW_KEY_6:
             app->addPolygon(6);
-        pressedPreviously[0] = action;
-    } else if (key == GLFW_KEY_7) {
-        if (action == GLFW_PRESS && !pressedPreviously[4])
+            break;
+        case GLFW_KEY_7:
             app->addPolygon(7);
-        pressedPreviously[0] = action;
-    } else if (key == GLFW_KEY_8) {
-        if (action == GLFW_PRESS && !pressedPreviously[5])
+            break;
+        case GLFW_KEY_8:
             app->addPolygon(8);
-        pressedPreviously[0] = action;
+            break;
     }
 }
