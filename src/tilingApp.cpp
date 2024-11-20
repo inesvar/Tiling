@@ -66,6 +66,7 @@ void TilingApp::render() const {
     for (auto& polygon : polygons) {
         polygon->render(shaderProgram);
     }
+    polygons[0]->highlightEdge(shaderProgram, 0);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

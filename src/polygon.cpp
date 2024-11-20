@@ -60,6 +60,18 @@ void Polygon::render(const unsigned shaderProgram,
     glDrawArrays(GL_LINE_LOOP, 0, nbSides);
 }
 
+void Polygon::highlightEdge(const unsigned shaderProgram,
+                            const int edge) const {
+    int colorUniform = glGetUniformLocation(shaderProgram, "color");
+    glUniform3fv(colorUniform, 1, value_ptr(nextColor(5.0)));
+    int positionUniform = glGetUniformLocation(shaderProgram, "position");
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
+    glBindVertexArray(vao);
+    glLineWidth(5.0);
+    glDrawArrays(GL_LINE_LOOP, edge, 2);
+    glLineWidth(1.0);
+}
+
 /// @brief Position the polygon so that vertices are on `a`, `b`...
 /// @param a
 /// @param b

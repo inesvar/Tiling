@@ -12,7 +12,7 @@
 /// Non-copyable.
 class Polygon : public std::enable_shared_from_this<Polygon> {
     // NOTE nbSides can change during move assignment
-    int nbSides;
+    int nbSides{};
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
     glm::vec3 color{};
@@ -35,6 +35,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     void positionAt(const glm::vec2& a, const glm::vec2& b);
     void render(const unsigned shaderProgram,
                 const GLenum drawingMode = GL_TRIANGLE_FAN) const;
+    void highlightEdge(const unsigned shaderProgram, const int edge) const;
     bool bindTo(const std::shared_ptr<Polygon> other, int edge = 0);
     glm::vec2 getFirstVertex() const;
     glm::vec2 getFirstEdge() const;
