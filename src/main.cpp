@@ -53,12 +53,11 @@ int main() {
         // Testing move construction
         // std::shared_ptr<TilingApp> app2(new TilingApp(window));
         // std::shared_ptr<TilingApp> app(new TilingApp(std::move(*app2)));
-        
 
         app->addPolygon(3);
 
         for (unsigned i = 0; i < 4; i++) {
-            app->addPolygon(3 + i % 2, i);
+            app->addPolygonNextToLast(3 + i % 2);
         }
         app->debug();
 

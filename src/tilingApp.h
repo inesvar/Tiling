@@ -16,6 +16,7 @@ class TilingApp {
     unsigned shaderProgram{};
     GLFWwindow* window{};
     std::list<Edge> edges{};
+    std::list<Edge>::iterator currentEdge{};
 
     void log(const char* log) const;
     void initGlfwKeyCallback();
@@ -29,15 +30,15 @@ class TilingApp {
     TilingApp(TilingApp&&);
     TilingApp& operator=(TilingApp&&);
     void addPolygon(int nbSides);
-    void addPolygon(int nbSides, unsigned polygonToBindTo);
+    void addPolygonNextToLast(int nbSides);
     void render() const;
     void debug() const;
+
+    static void keyCallback(GLFWwindow* window, int key, int scancode,
+                            int action, int mods);
 };
 
 static_assert(!std::is_copy_constructible<TilingApp>::value);
 static_assert(!std::is_copy_assignable<TilingApp>::value);
-
-void keyCallback(GLFWwindow* window, int key, int scancode, int action,
-                 int mods);
 
 #endif /* TILING_APP_H */

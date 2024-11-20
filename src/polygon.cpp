@@ -14,6 +14,7 @@ using namespace glm;
 /// @param nbSides (should be between 3 and 8 included)
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (1.0, 0.0)
+// TODO correct b default value
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     color = nextColor(50);
     initPoints(nbSides);

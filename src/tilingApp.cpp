@@ -22,7 +22,8 @@ TilingApp::~TilingApp() {
 
 TilingApp::TilingApp(TilingApp&& other)
     : polygons(std::move(other.polygons)), shaderProgram(other.shaderProgram),
-      window(std::move(other.window)), edges(std::move(other.edges)) {
+      window(std::move(other.window)), edges(std::move(other.edges)),
+      currentEdge(std::move(currentEdge)) {
     other.shaderProgram = 0;
     initGlfwKeyCallback();
     log(" was " BLUE "created using move" RESET ".");
@@ -36,21 +37,33 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
         other.shaderProgram = 0;
         window = std::move(other.window);
         edges = std::move(other.edges);
+        currentEdge = std::move(other.currentEdge);
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
 }
 
 void TilingApp::addPolygon(int nbSides) {
-    polygons.emplace_back(new Polygon(nbSides));
-    for (int i = 0; i < nbSides; i++) {
-        edges.emplace_back(polygons.back(), i);
+    if (polygons.empty()) {
+        polygons.emplace_back(new Polygon(nbSides));
+        for (int i = 0; i < nbSides; i++) {
+            edges.emplace_back(polygons.back(), i);
+        }
+        currentEdge = edges.begin();
+    } else {
+        polygons.emplace_back(new Polygon(nbSides));
+        polygons.back()->bindTo(currentEdge->polygon, currentEdge->edge + 1);
+        // TODO remove duplicated edges, insert in the right place
+        for (int i = 0; i < nbSides; i++) {
+            edges.emplace_back(polygons.back(), i);
+        }
     }
 }
 
-void TilingApp::addPolygon(int nbSides, unsigned polygonToBindTo) {
-    polygons.emplace_back(new Polygon(nbSides));
-    polygons.back()->bindTo(polygons[polygonToBindTo]);
+void TilingApp::addPolygonNextToLast(int nbSides) {
+    auto polygon = std::make_shared<Polygon>(nbSides);
+    polygon->bindTo(polygons.back());
+    polygons.push_back(polygon);
     for (int i = 0; i < nbSides; i++) {
         edges.emplace_back(polygons.back(), i);
     }
@@ -75,7 +88,7 @@ void TilingApp::render() const {
     for (auto& polygon : polygons) {
         polygon->render(shaderProgram);
     }
-    edges.front().render(shaderProgram);
+    currentEdge->render(shaderProgram);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -93,11 +106,11 @@ void TilingApp::destroyGL(const bool destroyProgram) {
 
 void TilingApp::initGlfwKeyCallback() {
     glfwSetWindowUserPointer(window, this);
-    glfwSetKeyCallback(window, keyCallback);
+    glfwSetKeyCallback(window, TilingApp::keyCallback);
 }
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action,
-                 int mods) {
+void TilingApp::keyCallback(GLFWwindow* window, int key, int scancode,
+                            int action, int mods) {
 
     if (action != GLFW_PRESS) {
         return;
@@ -128,5 +141,17 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action,
         case GLFW_KEY_8:
             app->addPolygon(8);
             break;
+        case GLFW_KEY_TAB: {
+            if (mods && GLFW_MOD_SHIFT) {
+                if (app->currentEdge == app->edges.begin()) {
+                    app->currentEdge = app->edges.end();
+                }
+                app->currentEdge--;
+            } else {
+                if (++app->currentEdge == app->edges.end()) {
+                    app->currentEdge = app->edges.begin();
+                }
+            }
+        }
     }
 }
