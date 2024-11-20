@@ -2,6 +2,8 @@
 #include "utils.h"
 #include <glad/glad.h>
 
+/// @brief Position vec2 `points` on the xy plane using uniform mat3x2
+/// `position`.
 static const char* minimalVertexShader =
     "#version 330 core\n"
     "layout (location = 0) in vec2 points;\n"
@@ -12,6 +14,7 @@ static const char* minimalVertexShader =
     "    gl_Position = vec4(pos, 0.0, 1.0);\n"
     "}\n";
 
+/// @brief Color fragment using uniform vec3 `color`.
 static const char* minimalFragmentShader =
     "#version 330 core\n"
     "uniform vec3 color;\n"
@@ -19,7 +22,7 @@ static const char* minimalFragmentShader =
     "    gl_FragColor = vec4(color, 1.0);\n"
     "}\n";
 
-bool createProgram(unsigned& program) {
+bool createMinimalProgram(unsigned& program) {
     // create vertex shader
     unsigned vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &minimalVertexShader, NULL);

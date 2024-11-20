@@ -1,6 +1,6 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-bool createProgram(unsigned& program);
+bool createMinimalProgram(unsigned& program);
 
 #endif /* PROGRAM_H */

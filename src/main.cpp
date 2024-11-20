@@ -45,7 +45,7 @@ int main() {
     glfwSwapInterval(1);
 
     unsigned program;
-    if (!createProgram(program)) {
+    if (!createMinimalProgram(program)) {
         return -1;
     }
     glClearColor(1.0, 1.0, 1.0, 1.0);
