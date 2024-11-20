@@ -30,8 +30,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     ~Polygon();
     Polygon(const Polygon&) = delete;
     Polygon& operator=(const Polygon&) = delete;
-    Polygon(Polygon&& other);
-    Polygon& operator=(Polygon&& other);
+    Polygon(Polygon&&);
+    Polygon& operator=(Polygon&&);
     void positionAt(const glm::vec2& a, const glm::vec2& b);
     void render(const unsigned shaderProgram,
                 const GLenum drawingMode = GL_TRIANGLE_FAN) const;
@@ -40,5 +40,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     glm::vec2 getFirstEdge() const;
     void debug() const;
 };
+
+static_assert(!std::is_copy_constructible<Polygon>::value);
+static_assert(!std::is_copy_assignable<Polygon>::value);
 
 #endif /* POLYGON_H */
