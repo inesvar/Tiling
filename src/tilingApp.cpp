@@ -30,9 +30,10 @@ TilingApp::TilingApp(TilingApp&& other)
 TilingApp& TilingApp::operator=(TilingApp&& other) {
     if (&other != this) {
         polygons = std::move(other.polygons);
+        destroyGL((shaderProgram == other.shaderProgram));
         shaderProgram = other.shaderProgram;
-        window = std::move(other.window);
         other.shaderProgram = 0;
+        window = std::move(other.window);
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
@@ -80,7 +81,6 @@ void TilingApp::destroyGL(const bool destroyProgram) {
     if (destroyProgram && (shaderProgram)) {
         glDeleteProgram(shaderProgram);
     }
-    polygons.clear();
 }
 
 void TilingApp::initGlfwKeyCallback() {
