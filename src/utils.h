@@ -12,6 +12,7 @@
 glm::vec2 rotate(float radianAngle,
                  const glm::vec2& vector = glm::vec2(1.0, 0.0));
 glm::vec3 nextColor(float hueStep = 30);
+glm::vec3 cursorColor();
 void logError(const char* error);
 
 #endif /* UTILS_H */

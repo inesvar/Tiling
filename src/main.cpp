@@ -8,8 +8,8 @@
 #include <memory>
 #include <string>
 
-const int WINDOW_WIDTH = 600;
-const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 800;
 
 std::string getWindowTitle();
 void framebufferSizeCallback(GLFWwindow* window, int height, int width);

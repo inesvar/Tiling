@@ -29,7 +29,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
 
   public:
     Polygon(int nbSides, const glm::vec2& a = glm::vec2(0.0),
-            const glm::vec2& b = glm::vec2(0.4, 0.0));
+            const glm::vec2& b = glm::vec2(0.2, 0.0));
     ~Polygon();
     Polygon(const Polygon&) = delete;
     Polygon& operator=(const Polygon&) = delete;

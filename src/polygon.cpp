@@ -13,7 +13,7 @@ using namespace glm;
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
 /// @param nbSides (should be between 3 and 8 included)
 /// @param a defaults to (0.0, 0.0)
-/// @param b defaults to (0.4, 0.0)
+/// @param b defaults to (0.2, 0.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
     color = nextColor(50);
     initPoints(nbSides);
@@ -60,7 +60,7 @@ void Polygon::render(const unsigned shaderProgram,
 void Polygon::highlightEdge(const unsigned shaderProgram,
                             const int edge) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
-    glUniform3fv(colorUniform, 1, value_ptr(nextColor(5.0)));
+    glUniform3fv(colorUniform, 1, value_ptr(cursorColor()));
     int positionUniform = glGetUniformLocation(shaderProgram, "position");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);

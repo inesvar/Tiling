@@ -30,6 +30,20 @@ vec3 nextColor(float hueStep) {
     return returnColor;
 }
 
+/// @brief Return cursor color (HSV color circle).
+vec3 cursorColor() {
+    static vec3 color = vec3(1.0f, 0.2f, 0.2f);
+    auto returnColor = color;
+    auto hsv = hsvColor(color);
+    if (hsv.x + 5.0 > 360) {
+        hsv.x = (hsv.x + 5.0 - 360);
+    } else {
+        hsv.x = hsv.x + 5.0;
+    }
+    color = rgbColor(hsv);
+    return returnColor;
+}
+
 /// @brief Print `error` in red to the cerr buffer.
 /// @param error
 void logError(const char* error) {
