@@ -21,6 +21,7 @@ class TilingApp {
     void log(const char* log) const;
     void initGlfwKeyCallback();
     void destroyGL(const bool destroyProgram = true);
+    void handleKeyPress(const int key, const int mods);
 
   public:
     TilingApp(GLFWwindow* window);

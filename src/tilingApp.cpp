@@ -108,49 +108,51 @@ void TilingApp::initGlfwKeyCallback() {
     glfwSetKeyCallback(window, TilingApp::keyCallback);
 }
 
-void TilingApp::keyCallback(GLFWwindow* window, int key, int scancode,
-                            int action, int mods) {
-
-    if (action != GLFW_PRESS) {
-        return;
-    }
-
-    void* ptr = glfwGetWindowUserPointer(window);
-    auto* app = static_cast<TilingApp*>(ptr);
-
+void TilingApp::handleKeyPress(const int key, const int mods) {
     switch (key) {
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, true);
             break;
         case GLFW_KEY_3:
-            app->addPolygon(3);
+            addPolygon(3);
             break;
         case GLFW_KEY_4:
-            app->addPolygon(4);
+            addPolygon(4);
             break;
         case GLFW_KEY_5:
-            app->addPolygon(5);
+            addPolygon(5);
             break;
         case GLFW_KEY_6:
-            app->addPolygon(6);
+            addPolygon(6);
             break;
         case GLFW_KEY_7:
-            app->addPolygon(7);
+            addPolygon(7);
             break;
         case GLFW_KEY_8:
-            app->addPolygon(8);
+            addPolygon(8);
             break;
         case GLFW_KEY_TAB: {
             if (mods && GLFW_MOD_SHIFT) {
-                if (app->currentEdge == app->edges.begin()) {
-                    app->currentEdge = app->edges.end();
+                if (currentEdge == edges.begin()) {
+                    currentEdge = edges.end();
                 }
-                app->currentEdge--;
+                currentEdge--;
             } else {
-                if (++app->currentEdge == app->edges.end()) {
-                    app->currentEdge = app->edges.begin();
+                if (++currentEdge == edges.end()) {
+                    currentEdge = edges.begin();
                 }
             }
         }
+    }
+}
+
+void TilingApp::keyCallback(GLFWwindow* window, int key, int scancode,
+                            int action, int mods) {
+
+    void* ptr = glfwGetWindowUserPointer(window);
+    auto* app = static_cast<TilingApp*>(ptr);
+
+    if (action == GLFW_PRESS) {
+        app->handleKeyPress(key, mods);
     }
 }
