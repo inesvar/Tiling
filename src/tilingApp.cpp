@@ -121,21 +121,27 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             glfwSetWindowShouldClose(window, true);
             break;
         case GLFW_KEY_3:
+        case GLFW_KEY_KP_3:
             addPolygon(3);
             break;
         case GLFW_KEY_4:
+        case GLFW_KEY_KP_4:
             addPolygon(4);
             break;
         case GLFW_KEY_5:
+        case GLFW_KEY_KP_5:
             addPolygon(5);
             break;
         case GLFW_KEY_6:
+        case GLFW_KEY_KP_6:
             addPolygon(6);
             break;
         case GLFW_KEY_7:
+        case GLFW_KEY_KP_7:
             addPolygon(7);
             break;
         case GLFW_KEY_8:
+        case GLFW_KEY_KP_8:
             addPolygon(8);
             break;
         case GLFW_KEY_TAB: {
