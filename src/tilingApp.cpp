@@ -40,6 +40,7 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
         window = std::move(other.window);
         edges = std::move(other.edges);
         currentEdge = std::move(other.currentEdge);
+        initGlfwKeyCallback();
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
