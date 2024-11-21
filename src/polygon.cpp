@@ -83,6 +83,9 @@ void Polygon::positionAt(const vec2& a, const vec2& b) {
 
 vec2 Polygon::getFirstVertex() const { return position[2]; }
 vec2 Polygon::getFirstEdge() const { return position[0] + position[2]; }
+vec2 Polygon::getVertex(const int vertex) const {
+    return position * vec3(points[vertex], 1.0);
+}
 
 void Polygon::debug() const {
     log(":");

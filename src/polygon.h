@@ -15,6 +15,7 @@
 /// Edge n binds vertex n and vertex (n + 1) % nbSides.
 class Polygon : public std::enable_shared_from_this<Polygon> {
     const int nbSides{};
+    // size: nbSides + 1, points[nbSides] ~= points[0]
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
     glm::vec3 color{};
@@ -41,6 +42,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     bool bindTo(const std::shared_ptr<Polygon> other, int edge = 0);
     glm::vec2 getFirstVertex() const;
     glm::vec2 getFirstEdge() const;
+    glm::vec2 getVertex(const int vertex) const;
     void debug() const;
 };
 

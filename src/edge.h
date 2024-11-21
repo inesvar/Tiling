@@ -11,6 +11,7 @@ struct Edge {
     Edge(std::shared_ptr<Polygon> polygon, int edge)
         : polygon(polygon), edge(edge) {};
     void render(const unsigned shaderProgram) const;
+    bool connectedTo(const Edge& edge) const;
 };
 
 struct EdgeHash {
