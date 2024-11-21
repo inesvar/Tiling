@@ -28,18 +28,15 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
 /// @param edge defaults to 0
 bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
     bool success = true;
-    if (edge == 0) {
-        edge = other->nbSides;
-    }
     try {
-        other->neighbors[edge - 1] = shared_from_this();
+        other->neighbors[edge] = shared_from_this();
     } catch (const std::exception& e) {
         logError(e.what());
         success = false;
     }
     neighbors[0] = other;
-    positionAt(other->position * vec3(other->points[edge], 1.0),
-               other->position * vec3(other->points[edge - 1], 1.0));
+    positionAt(other->position * vec3(other->points[edge + 1], 1.0),
+               other->position * vec3(other->points[edge], 1.0));
     log(" was " YELLOW "bound" RESET ".");
     return success;
 }

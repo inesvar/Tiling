@@ -10,6 +10,9 @@
 
 /// @brief Colored polygon with associated OpenGL VBO and VAO.
 /// Non-copyable.
+/// Edges and vertices are numbered from 0 to nbSides excluded,
+/// in counter-clockwise order.
+/// Edge n binds vertex n and vertex (n + 1) % nbSides.
 class Polygon : public std::enable_shared_from_this<Polygon> {
     // NOTE nbSides can change during move assignment
     int nbSides{};

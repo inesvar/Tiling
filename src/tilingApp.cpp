@@ -52,7 +52,7 @@ void TilingApp::addPolygon(int nbSides) {
         currentEdge = edges.begin();
     } else {
         polygons.emplace_back(new Polygon(nbSides));
-        polygons.back()->bindTo(currentEdge->polygon, currentEdge->edge + 1);
+        polygons.back()->bindTo(currentEdge->polygon, currentEdge->edge);
         // TODO remove duplicated edges, insert in the right place
         for (int i = 0; i < nbSides; i++) {
             edges.emplace_back(polygons.back(), i);
