@@ -55,16 +55,40 @@ void TilingApp::addPolygon(int nbSides) {
         }
         currentEdge = edges.begin();
     } else {
+        // create new polygon
         polygons.emplace_back(new Polygon(nbSides));
         polygons.back()->bindTo(currentEdge->polygon, currentEdge->edge);
-        auto oldEdge = currentEdge;
+        // create a list of this polygon edges
         auto newEdges = std::list<Edge>{};
-        for (int i = 1; i < nbSides; i++) {
+        for (int i = 0; i < nbSides; i++) {
             newEdges.emplace_back(polygons.back(), i);
         }
-        currentEdge =
-            edges.insert(currentEdge, newEdges.begin(), newEdges.end());
-        edges.erase(oldEdge);
+        // store the new edges
+        std::list<Edge>::const_iterator right = circularNext(currentEdge);
+        std::list<Edge>::const_iterator left =
+            edges.insert(right, newEdges.begin(), newEdges.end());
+        // for any consecutive connected edges
+        while (left->connectedTo(*circularPrev(left))) {
+            std::clog << "connected edges left !" << std::endl;
+            // update `links` (insert the two connected edges)
+            links.emplace(*left, *circularPrev(left));
+            links.emplace(*circularPrev(left), *left);
+            // update `edges` (remove the two unaccessible edges)
+            edges.erase(circularPrev(left));
+            left = circularNext(left);
+            edges.erase(circularPrev(left));
+        }
+        while (right->connectedTo(*circularPrev(right))) {
+            std::clog << "connected edges right !" << std::endl;
+            // update `links` (insert the two connected edges)
+            links.emplace(*right, *circularPrev(right));
+            links.emplace(*circularPrev(right), *right);
+            // update `edges` (remove the two unaccessible edges)
+            edges.erase(circularPrev(right));
+            right = circularNext(right);
+            edges.erase(circularPrev(right));
+        }
+        currentEdge = left;
     }
 }
 
@@ -116,6 +140,24 @@ void TilingApp::removeAllPolygons() {
     currentEdge = edges.begin();
 }
 
+std::list<Edge>::const_iterator
+TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
+    std::list<Edge>::const_iterator incremented = edge;
+    if (++incremented == edges.cend()) {
+        incremented = edges.cbegin();
+    }
+    return incremented;
+}
+
+std::list<Edge>::const_iterator
+TilingApp::circularPrev(std::list<Edge>::const_iterator& edge) const {
+    std::list<Edge>::const_iterator decremented = edge;
+    if (decremented == edges.cbegin()) {
+        decremented = edges.cend();
+    }
+    return --decremented;
+}
+
 void TilingApp::handleKeyPress(const int key, const int mods) {
     switch (key) {
         case GLFW_KEY_ESCAPE:
@@ -147,14 +189,9 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             break;
         case GLFW_KEY_TAB: {
             if (mods && GLFW_MOD_SHIFT) {
-                if (currentEdge == edges.begin()) {
-                    currentEdge = edges.end();
-                }
-                currentEdge--;
+                currentEdge = circularPrev(currentEdge);
             } else {
-                if (++currentEdge == edges.end()) {
-                    currentEdge = edges.begin();
-                }
+                currentEdge = circularNext(currentEdge);
             }
             break;
         }

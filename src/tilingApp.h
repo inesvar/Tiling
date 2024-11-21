@@ -18,12 +18,16 @@ class TilingApp {
     GLFWwindow* window{};
     std::list<Edge> edges{};
     std::unordered_map<Edge, Edge, EdgeHash> links{};
-    std::list<Edge>::iterator currentEdge{};
+    std::list<Edge>::const_iterator currentEdge{};
 
     void log(const char* log) const;
     void initGlfwKeyCallback();
     void destroyGL(const bool destroyProgram = true);
     void handleKeyPress(const int key, const int mods);
+    std::list<Edge>::const_iterator
+    circularNext(std::list<Edge>::const_iterator& edge) const;
+    std::list<Edge>::const_iterator
+    circularPrev(std::list<Edge>::const_iterator& edge) const;
 
   public:
     TilingApp(GLFWwindow* window);

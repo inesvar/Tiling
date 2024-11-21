@@ -12,13 +12,10 @@ bool Edge::connectedTo(const Edge& other) const {
     glm::vec2 other_b = other.polygon->getVertex(other.edge + 1);
     glm::vec2 this_a = polygon->getVertex(edge);
     glm::vec2 this_b = polygon->getVertex(edge + 1);
-    std::cout << other_a.x << ", " << other_a.y << std::endl;
-    std::cout << this_a.x << ", " << this_a.y << std::endl;
-    std::cout << other_b.x << ", " << other_b.y << std::endl;
-    std::cout << this_b.x << ", " << this_b.y << std::endl;
     float distance1 = glm::distance(other_a, this_b);
     float distance2 = glm::distance(other_b, this_a);
-    return (distance1 < 1e-7) && (distance2 < 1e-7);
+    std::clog << distance1 << ", " << distance2 << std::endl;
+    return (distance1 < 1e-5) && (distance2 < 1e-5);
 };
 
 std::size_t EdgeHash::operator()(const Edge& e) const {
