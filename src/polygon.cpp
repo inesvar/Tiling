@@ -14,9 +14,9 @@ using namespace glm;
 /// @param nbSides (should be between 3 and 8 included)
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (0.2, 0.0)
-Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) {
+Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
     color = nextColor(50);
-    initPoints(nbSides);
+    initPoints();
     neighbors.resize(nbSides);
     initGL();
     positionAt(a, b);
@@ -105,7 +105,7 @@ Polygon::~Polygon() {
     log(" was " RED "deleted" RESET ".");
 }
 
-Polygon::Polygon(Polygon&& other)
+/* Polygon::Polygon(Polygon&& other)
     : nbSides(other.nbSides), points(std::move(other.points)),
       position(std::move(other.position)), color(std::move(other.color)),
       vbo(std::move(other.vbo)), vao(std::move(other.vao)),
@@ -130,11 +130,10 @@ Polygon& Polygon::operator=(Polygon&& other) {
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
-}
+} */
 
-void Polygon::initPoints(int nbSides) {
+void Polygon::initPoints() {
     assert(nbSides >= 2 && nbSides <= 8);
-    this->nbSides = nbSides;
     points.resize(nbSides + 1);
     vec2 xy = vec2(-0.0f);
     float closingAngle = 2.0 * pi<double>() / nbSides;

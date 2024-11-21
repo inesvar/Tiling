@@ -22,7 +22,7 @@ TilingApp::~TilingApp() {
     log(" was " RED "deleted" RESET ".");
 }
 
-TilingApp::TilingApp(TilingApp&& other)
+/* TilingApp::TilingApp(TilingApp&& other)
     : polygons(std::move(other.polygons)), shaderProgram(other.shaderProgram),
       window(std::move(other.window)), edges(std::move(other.edges)),
       currentEdge(std::move(other.currentEdge)) {
@@ -44,7 +44,7 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
-}
+} */
 
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {

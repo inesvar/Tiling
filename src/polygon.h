@@ -14,15 +14,14 @@
 /// in counter-clockwise order.
 /// Edge n binds vertex n and vertex (n + 1) % nbSides.
 class Polygon : public std::enable_shared_from_this<Polygon> {
-    // NOTE nbSides can change during move assignment
-    int nbSides{};
+    const int nbSides{};
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};
     std::vector<std::weak_ptr<Polygon>> neighbors{};
-    void initPoints(int nbSides);
+    void initPoints();
     void initGL();
     void destroyGL(const bool destroyVbo = true, const bool destroyVao = true);
     void log(const char* log) const;
@@ -33,8 +32,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     ~Polygon();
     Polygon(const Polygon&) = delete;
     Polygon& operator=(const Polygon&) = delete;
-    Polygon(Polygon&&);
-    Polygon& operator=(Polygon&&);
+    /* Polygon(Polygon&&);
+    Polygon& operator=(Polygon&&); */
     void positionAt(const glm::vec2& a, const glm::vec2& b);
     void render(const unsigned shaderProgram,
                 const GLenum drawingMode = GL_TRIANGLE_FAN) const;

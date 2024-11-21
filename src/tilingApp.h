@@ -28,8 +28,8 @@ class TilingApp {
     ~TilingApp();
     TilingApp(const TilingApp&) = delete;
     TilingApp& operator=(const TilingApp&) = delete;
-    TilingApp(TilingApp&&);
-    TilingApp& operator=(TilingApp&&);
+    /* TilingApp(TilingApp&&);
+    TilingApp& operator=(TilingApp&&); */
     void addPolygon(int nbSides);
     void removeAllPolygons();
     void render() const;
