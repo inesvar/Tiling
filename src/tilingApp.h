@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <list>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 /// @brief Manages Polygon instances and an OpenGL shader program.
@@ -16,6 +17,7 @@ class TilingApp {
     unsigned shaderProgram{};
     GLFWwindow* window{};
     std::list<Edge> edges{};
+    std::unordered_map<Edge, Edge, EdgeHash> links{};
     std::list<Edge>::iterator currentEdge{};
 
     void log(const char* log) const;

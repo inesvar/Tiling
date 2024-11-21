@@ -2,6 +2,7 @@
 #define EDGE_H
 
 #include "polygon.h"
+#include <string>
 
 struct Edge {
     std::shared_ptr<Polygon> polygon{};
@@ -11,5 +12,11 @@ struct Edge {
         : polygon(polygon), edge(edge) {};
     void render(const unsigned shaderProgram) const;
 };
+
+struct EdgeHash {
+    std::size_t operator()(const Edge& e) const;
+};
+
+bool operator==(const Edge& lhs, const Edge& rhs);
 
 #endif /* EDGE_H */

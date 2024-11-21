@@ -112,6 +112,7 @@ void TilingApp::removeAllPolygons() {
     edges.clear();
     polygons.clear();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
+    links.clear();
     currentEdge = edges.begin();
 }
 
