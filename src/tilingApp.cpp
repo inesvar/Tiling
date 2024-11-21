@@ -11,6 +11,8 @@
 TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     assert(createMinimalProgram(shaderProgram));
     initGlfwKeyCallback();
+    edges.emplace_back(std::make_shared<Polygon>(2), 0);
+    currentEdge = edges.begin();
     log(" was " GREEN "created" RESET ".");
 }
 
@@ -23,7 +25,7 @@ TilingApp::~TilingApp() {
 TilingApp::TilingApp(TilingApp&& other)
     : polygons(std::move(other.polygons)), shaderProgram(other.shaderProgram),
       window(std::move(other.window)), edges(std::move(other.edges)),
-      currentEdge(std::move(currentEdge)) {
+      currentEdge(std::move(other.currentEdge)) {
     other.shaderProgram = 0;
     initGlfwKeyCallback();
     log(" was " BLUE "created using move" RESET ".");
@@ -46,6 +48,7 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {
         polygons.emplace_back(new Polygon(nbSides));
+        edges.clear();
         for (int i = 0; i < nbSides; i++) {
             edges.emplace_back(polygons.back(), i);
         }
@@ -53,19 +56,14 @@ void TilingApp::addPolygon(int nbSides) {
     } else {
         polygons.emplace_back(new Polygon(nbSides));
         polygons.back()->bindTo(currentEdge->polygon, currentEdge->edge);
-        // TODO remove duplicated edges, insert in the right place
-        for (int i = 0; i < nbSides; i++) {
-            edges.emplace_back(polygons.back(), i);
+        auto oldEdge = currentEdge;
+        auto newEdges = std::list<Edge>{};
+        for (int i = 1; i < nbSides; i++) {
+            newEdges.emplace_back(polygons.back(), i);
         }
-    }
-}
-
-void TilingApp::addPolygonNextToLast(int nbSides) {
-    auto polygon = std::make_shared<Polygon>(nbSides);
-    polygon->bindTo(polygons.back());
-    polygons.push_back(polygon);
-    for (int i = 0; i < nbSides; i++) {
-        edges.emplace_back(polygons.back(), i);
+        currentEdge =
+            edges.insert(currentEdge, newEdges.begin(), newEdges.end());
+        edges.erase(oldEdge);
     }
 }
 

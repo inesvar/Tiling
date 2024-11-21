@@ -133,7 +133,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
 }
 
 void Polygon::initPoints(int nbSides) {
-    assert(nbSides >= 3 && nbSides <= 8);
+    assert(nbSides >= 2 && nbSides <= 8);
     this->nbSides = nbSides;
     points.resize(nbSides + 1);
     vec2 xy = vec2(-0.0f);

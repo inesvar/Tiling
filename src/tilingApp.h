@@ -30,7 +30,6 @@ class TilingApp {
     TilingApp(TilingApp&&);
     TilingApp& operator=(TilingApp&&);
     void addPolygon(int nbSides);
-    void addPolygonNextToLast(int nbSides);
     void render() const;
     void debug() const;
 
