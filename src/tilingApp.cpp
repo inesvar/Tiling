@@ -108,6 +108,13 @@ void TilingApp::initGlfwKeyCallback() {
     glfwSetKeyCallback(window, TilingApp::keyCallback);
 }
 
+void TilingApp::removeAllPolygons() {
+    edges.clear();
+    polygons.clear();
+    edges.emplace_back(std::make_shared<Polygon>(2), 0);
+    currentEdge = edges.begin();
+}
+
 void TilingApp::handleKeyPress(const int key, const int mods) {
     switch (key) {
         case GLFW_KEY_ESCAPE:
@@ -142,7 +149,11 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
                     currentEdge = edges.begin();
                 }
             }
+            break;
         }
+        case GLFW_KEY_DELETE:
+            removeAllPolygons();
+            break;
     }
 }
 
