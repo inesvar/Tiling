@@ -111,7 +111,10 @@ void TilingApp::render() const {
     for (auto& polygon : polygons) {
         polygon->render(shaderProgram);
     }
-    currentEdge->render(shaderProgram);
+    for (auto& edge : edges) {
+        edge.underline(shaderProgram);
+    }
+    currentEdge->highlight(shaderProgram);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

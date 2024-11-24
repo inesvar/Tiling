@@ -39,6 +39,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     void render(const unsigned shaderProgram,
                 const GLenum drawingMode = GL_TRIANGLE_FAN) const;
     void highlightEdge(const unsigned shaderProgram, const int edge) const;
+    void underlineEdge(const unsigned shaderProgram, const int edge) const;
     bool bindTo(const std::shared_ptr<Polygon> other, int edge = 0);
     glm::vec2 getFirstVertex() const;
     glm::vec2 getFirstEdge() const;

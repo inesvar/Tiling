@@ -2,8 +2,12 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-void Edge::render(const unsigned shaderProgram) const {
+void Edge::highlight(const unsigned shaderProgram) const {
     polygon->highlightEdge(shaderProgram, edge);
+}
+
+void Edge::underline(const unsigned shaderProgram) const {
+    polygon->underlineEdge(shaderProgram, edge);
 }
 
 bool Edge::connectedTo(const Edge& other) const {
