@@ -46,11 +46,12 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
     return *this;
 } */
 
-/// @brief Creates a Polygon with `nbSides` on the position of `currentEdge`.
-/// Stores the new polygon sides in `edges`. Overlapping edges
-/// stored contiguously in `edges` are detected and moved to `links`.
-/// Non-contiguous overlapping edges aren't detected and remain stored in
-/// `edges`.
+/// @brief Create a Polygon with `nbSides` on the position of `currentEdge`.
+/// The new polygon sides are stored in `edges` or `links`.
+///
+/// First all new edges are stored in `edges`. Then overlapping edges
+/// contiguous in `edges` are detected and moved to `links`. Non-contiguous
+/// overlapping edges aren't detected and remain stored in `edges`.
 /// @param nbSides
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {
@@ -69,7 +70,7 @@ void TilingApp::addPolygon(int nbSides) {
         for (int i = 0; i < nbSides; i++) {
             newEdges.emplace_back(polygons.back(), i);
         }
-        // store the new edges (between iterators `left` and `right`)
+        // store the new edges in `edges` (between iterators `left` and `right`)
         std::list<Edge>::const_iterator right = circularNext(currentEdge);
         std::list<Edge>::const_iterator left =
             edges.insert(right, newEdges.begin(), newEdges.end());
@@ -78,13 +79,11 @@ void TilingApp::addPolygon(int nbSides) {
         // (2) update `edges` (remove the two overlapping edges)
         // /!\ pay attention not to invalidate `left`
         while (right->connectedTo(*circularPrev(right))) {
-            std::clog << "overlapping edges right !" << std::endl;
             // cf (1)
             links.emplace(*right, *circularPrev(right));
             links.emplace(*circularPrev(right), *right);
             // cf /!\ .
             if (circularPrev(right) == left) {
-                std::cout << "left would have been invalidated" << std::endl;
                 left = circularNext(right);
                 // cf (2)
                 edges.erase(circularPrev(right));
@@ -98,7 +97,6 @@ void TilingApp::addPolygon(int nbSides) {
             edges.erase(circularPrev(right));
         }
         while (left->connectedTo(*circularPrev(left))) {
-            std::clog << "overlapping edges left !" << std::endl;
             // cf (1)
             links.emplace(*left, *circularPrev(left));
             links.emplace(*circularPrev(left), *left);
