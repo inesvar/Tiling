@@ -15,7 +15,7 @@ using namespace glm;
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (0.2, 0.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
-    color = nextColor(50);
+    color = nextColor();
     initPoints();
     neighbors.resize(nbSides);
     initGL();
