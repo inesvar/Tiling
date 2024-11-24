@@ -164,8 +164,8 @@ void TilingApp::removeAllPolygons() {
 
 std::list<Edge>::const_iterator
 TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
-    std::list<Edge>::const_iterator incremented = edge;
-    if (++incremented == edges.cend()) {
+    std::list<Edge>::const_iterator incremented = std::next(edge);
+    if (incremented == edges.cend()) {
         incremented = edges.cbegin();
     }
     return incremented;
@@ -173,11 +173,11 @@ TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
 
 std::list<Edge>::const_iterator
 TilingApp::circularPrev(std::list<Edge>::const_iterator& edge) const {
-    std::list<Edge>::const_iterator decremented = edge;
-    if (decremented == edges.cbegin()) {
-        decremented = edges.cend();
+    std::list<Edge>::const_iterator toDecrement = edge;
+    if (toDecrement == edges.cbegin()) {
+        toDecrement = edges.cend();
     }
-    return --decremented;
+    return std::prev(toDecrement);
 }
 
 void TilingApp::handleKeyPress(const int key, const int mods) {
