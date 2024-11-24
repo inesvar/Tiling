@@ -11,7 +11,6 @@ void Edge::underline(const unsigned shaderProgram) const {
 }
 
 bool Edge::connectedTo(const Edge& other) const {
-    bool connected = false;
     glm::vec2 other_a = other.polygon->getVertex(other.edge);
     glm::vec2 other_b = other.polygon->getVertex(other.edge + 1);
     glm::vec2 this_a = polygon->getVertex(edge);

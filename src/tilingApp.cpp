@@ -223,8 +223,9 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
     }
 }
 
-void TilingApp::keyCallback(GLFWwindow* window, int key, int scancode,
-                            int action, int mods) {
+void TilingApp::keyCallback(GLFWwindow* window, int key,
+                            __attribute__((unused)) int scancode,
+                            __attribute__((unused)) int action, int mods) {
 
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);
