@@ -46,10 +46,11 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
     return *this;
 } */
 
-/// @brief Creates a Polygon with `nbSides` on the position of `currentEdge` and
-/// updates `edges` accordingly. Overlapping edges stored contiguously in
-/// `edges` are detected and moved to `links`. Non-contiguous overlapping edges
-/// aren't detected.
+/// @brief Creates a Polygon with `nbSides` on the position of `currentEdge`.
+/// Stores the new polygon sides in `edges`. Overlapping edges
+/// stored contiguously in `edges` are detected and moved to `links`.
+/// Non-contiguous overlapping edges aren't detected and remain stored in
+/// `edges`.
 /// @param nbSides
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {
@@ -68,30 +69,43 @@ void TilingApp::addPolygon(int nbSides) {
         for (int i = 0; i < nbSides; i++) {
             newEdges.emplace_back(polygons.back(), i);
         }
-        // store the new edges
+        // store the new edges (between iterators `left` and `right`)
         std::list<Edge>::const_iterator right = circularNext(currentEdge);
         std::list<Edge>::const_iterator left =
             edges.insert(right, newEdges.begin(), newEdges.end());
-        // for any consecutive connected edges
-        while (left->connectedTo(*circularPrev(left))) {
-            std::clog << "connected edges left !" << std::endl;
-            // update `links` (insert the two connected edges)
-            links.emplace(*left, *circularPrev(left));
-            links.emplace(*circularPrev(left), *left);
-            // update `edges` (remove the two unaccessible edges)
-            edges.erase(circularPrev(left));
-            left = circularNext(left);
-            edges.erase(circularPrev(left));
-        }
+        // for any consecutive overlapping edges
+        // (1) update `links` (insert the two overlapping edges)
+        // (2) update `edges` (remove the two overlapping edges)
+        // /!\ pay attention not to invalidate `left`
         while (right->connectedTo(*circularPrev(right))) {
-            std::clog << "connected edges right !" << std::endl;
-            // update `links` (insert the two connected edges)
+            std::clog << "overlapping edges right !" << std::endl;
+            // cf (1)
             links.emplace(*right, *circularPrev(right));
             links.emplace(*circularPrev(right), *right);
-            // update `edges` (remove the two unaccessible edges)
+            // cf /!\ .
+            if (circularPrev(right) == left) {
+                std::cout << "left would have been invalidated" << std::endl;
+                left = circularNext(right);
+                // cf (2)
+                edges.erase(circularPrev(right));
+                right = circularNext(right);
+                edges.erase(circularPrev(right));
+                break;
+            }
+            // cf (2)
             edges.erase(circularPrev(right));
             right = circularNext(right);
             edges.erase(circularPrev(right));
+        }
+        while (left->connectedTo(*circularPrev(left))) {
+            std::clog << "overlapping edges left !" << std::endl;
+            // cf (1)
+            links.emplace(*left, *circularPrev(left));
+            links.emplace(*circularPrev(left), *left);
+            // cf (2)
+            edges.erase(circularPrev(left));
+            left = circularNext(left);
+            edges.erase(circularPrev(left));
         }
         currentEdge = left;
     }

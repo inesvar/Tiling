@@ -23,17 +23,17 @@
 /// Linked list with bidirectional circular traversal using
 /// `TilingApp::circularNext` and `TilingApp::circularPrev`.
 ///
-/// @arg `links` Polygon sides unreachable by the edge cursor `currentEdge`.
-/// Hashmap mapping edge to edge.
+/// @arg `links` Shared Polygon sides unreachable by the edge cursor
+/// `currentEdge`. Hashmap mapping edge to edge.
 ///
 /// @note
-/// In principle, overlapping edges of connected polygons should be stored in
-/// `links` while other "unsaturated" edges should be stored in `edges`. In
-/// practice, the detection of overlapping edges when instantiating a new
-/// polygon is not perfect. There can remain undetected overlapping polygon
-/// sides in `edges`. However, the current implementation has the useful feature
-/// that adjacent elements in `edges` are always adjacent sides, and that
-/// polygons are always all connected.
+/// In principle, overlapping/shared edges of connected polygons should be
+/// stored in `links` while other edges should be stored in
+/// `edges`. In practice, the detection of overlapping edges when instantiating
+/// a new polygon is not perfect. There can remain undetected overlapping
+/// polygon sides in `edges`. However, the current implementation has the useful
+/// feature that adjacent elements in `edges` are always adjacent sides, and
+/// that polygons are always all connected.
 class TilingApp {
     std::vector<std::shared_ptr<Polygon>> polygons{};
     unsigned shaderProgram{};
