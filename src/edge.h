@@ -4,6 +4,7 @@
 #include "polygon.h"
 #include <string>
 
+/// @brief Side of a Polygon.
 struct Edge {
     std::shared_ptr<Polygon> polygon{};
     int edge{};

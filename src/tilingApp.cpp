@@ -46,6 +46,11 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
     return *this;
 } */
 
+/// @brief Creates a Polygon with `nbSides` on the position of `currentEdge` and
+/// updates `edges` accordingly. Overlapping edges stored contiguously in
+/// `edges` are detected and moved to `links`. Non-contiguous overlapping edges
+/// aren't detected.
+/// @param nbSides
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {
         polygons.emplace_back(new Polygon(nbSides));

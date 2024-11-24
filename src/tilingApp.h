@@ -10,8 +10,30 @@
 #include <unordered_map>
 #include <vector>
 
-/// @brief Manages Polygon instances and an OpenGL shader program.
-/// Non-copyable.
+// TODO update with the implementation
+
+/// @brief Manages Polygon instances, an edge cursor and an OpenGL shader
+/// program. Non-copyable.
+///
+/// @arg `currentEdge` Edge cursor that you can move from edge to edge to
+/// choose where to add a new polygon.
+/// This cursor can only access polygon sides stored in `edges`.
+///
+/// @arg `edges` Polygon sides accessible by the edge cursor `currentEdge`.
+/// Linked list with bidirectional circular traversal using
+/// `TilingApp::circularNext` and `TilingApp::circularPrev`.
+///
+/// @arg `links` Polygon sides unreachable by the edge cursor `currentEdge`.
+/// Hashmap mapping edge to edge.
+///
+/// @note
+/// In principle, overlapping edges of connected polygons should be stored in
+/// `links` while other "unsaturated" edges should be stored in `edges`. In
+/// practice, the detection of overlapping edges when instantiating a new
+/// polygon is not perfect. There can remain undetected overlapping polygon
+/// sides in `edges`. However, the current implementation has the useful feature
+/// that adjacent elements in `edges` are always adjacent sides, and that
+/// polygons are always all connected.
 class TilingApp {
     std::vector<std::shared_ptr<Polygon>> polygons{};
     unsigned shaderProgram{};
