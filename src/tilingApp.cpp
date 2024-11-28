@@ -118,7 +118,8 @@ void TilingApp::addPolygon(int nbSides) {
 /// removed from `edges` and the polygon is removed from `polygons`.
 ///
 /// @note This implementation supposes that the edges of the last polygon are
-/// all adjacent in `edges`.
+/// all adjacent in `edges` (there sequential in the _circular_ list, but may
+/// not be sequential in the underlying list).
 ///
 /// @note Removing the polygon pointed by `currentEdge` instead of the last
 /// polygon might result in polygons not being linked anymore.
@@ -154,9 +155,15 @@ void TilingApp::removeLastPolygon() {
         return;
     }
     if (left->edge > right->edge) {
-        // FIXME
-        logError("Removal of a polygon is not possible yet because the removal "
-                 "in the circular list is not implemented yet");
+        std::clog << "Circular list trouble." << std::endl;
+        // Unfortunately lastPolygon edges aren't sequential as they span the
+        // end and begining of the list.
+        std::list<Edge>::const_iterator futureRight =
+            std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
+                return (edge.polygon != lastPolygon);
+            });
+        edges.splice(edges.end(), edges, edges.begin(), futureRight);
+        removeLastPolygon();
         return;
     }
     debug();
