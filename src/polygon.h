@@ -14,7 +14,6 @@
 /// in counter-clockwise order.
 /// Edge n binds vertex n and vertex (n + 1) % nbSides.
 class Polygon : public std::enable_shared_from_this<Polygon> {
-    const int nbSides{};
     // size: nbSides + 1, points[nbSides] ~= points[0]
     std::vector<glm::vec2> points{};
     glm::mat3x2 position{};
@@ -28,6 +27,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     void log(const char* log) const;
 
   public:
+    const int nbSides{};
     Polygon(int nbSides, const glm::vec2& a = glm::vec2(0.0),
             const glm::vec2& b = glm::vec2(0.2, 0.0));
     ~Polygon();

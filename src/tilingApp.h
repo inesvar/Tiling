@@ -60,6 +60,7 @@ class TilingApp {
     TilingApp& operator=(TilingApp&&); */
     void addPolygon(int nbSides);
     void removeAllPolygons();
+    void removeLastPolygon();
     void render() const;
     void debug() const;
 

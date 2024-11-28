@@ -5,6 +5,7 @@
 #include <cassert>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include <glad/glad.h>
 #include <iostream>
 
@@ -109,10 +110,92 @@ void TilingApp::addPolygon(int nbSides) {
     }
 }
 
-void TilingApp::debug() const {
-    for (auto& polygon : polygons) {
-        polygon->debug();
+/// @brief Remove the Polygon created last. Variables `edges` and `links` are
+/// updated accordingly.
+///
+/// First, edges overlapping with the most recent polygon are added to `edges`
+/// and removed from `links`. Then the sides from the last polygon are
+/// removed from `edges` and the polygon is removed from `polygons`.
+///
+/// @note This implementation supposes that the edges of the last polygon are
+/// all adjacent in `edges`.
+///
+/// @note Removing the polygon pointed by `currentEdge` instead of the last
+/// polygon might result in polygons not being linked anymore.
+void TilingApp::removeLastPolygon() {
+    if (polygons.empty()) {
+        return;
+    } else if (polygons.size() == 1) {
+        removeAllPolygons();
+        return;
     }
+    auto lastPolygon = polygons.back();
+    std::clog << lastPolygon.get() << std::endl;
+    // TODO using a const iterator is not needed so no need to use it
+    std::list<Edge>::const_iterator left =
+        std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
+            return (edge.polygon == lastPolygon);
+        });
+    std::clog << "Left:" << left->polygon.get() << " " << left->edge
+              << std::endl;
+    auto _right =
+        std::find_if(edges.rbegin(), edges.rend(), [lastPolygon](Edge& edge) {
+            return (edge.polygon == lastPolygon);
+        });
+    std::clog << "_right:" << _right->polygon.get() << " " << _right->edge
+              << std::endl;
+    std::list<Edge>::const_iterator right = std::prev(_right.base());
+    std::clog << "Right:" << right->polygon.get() << " " << right->edge
+              << std::endl;
+    if (left == edges.end() || right == edges.end()) {
+        // FIXME
+        logError("Removal of a polygon with no accessible sides is not "
+                 "implemented yet.");
+        return;
+    }
+    if (left->edge > right->edge) {
+        // FIXME
+        logError("Removal of a polygon is not possible yet because the removal "
+                 "in the circular list is not implemented yet");
+        return;
+    }
+    debug();
+    int rightEdge = right->edge;
+    right = std::next(right);
+    for (int side = rightEdge + 1; side <= lastPolygon->nbSides - 1; side++) {
+        auto edge = Edge{lastPolygon, side};
+        auto linkedEdge = links.at(edge);
+        right = edges.insert(right, linkedEdge);
+        links.erase(edge);
+        links.erase(linkedEdge);
+    }
+    debug();
+    for (int side = left->edge - 1; side >= 0; side--) {
+        auto edge = Edge{lastPolygon, side};
+        auto linkedEdge = links.at(edge);
+        edges.insert(left, linkedEdge);
+        links.erase(edge);
+        links.erase(linkedEdge);
+    }
+    if (currentEdge->polygon == lastPolygon) {
+        currentEdge = circularPrev(left);
+    }
+    debug();
+    std::clog << "currentEdge" << currentEdge->polygon.get() << " "
+              << currentEdge->edge << std::endl;
+    edges.erase(left, right);
+    debug();
+    polygons.pop_back();
+}
+
+void TilingApp::debug() const {
+    /* for (auto& polygon : polygons) {
+        polygon->debug();
+    } */
+    for (auto& edge : edges) {
+        std::clog << edge.polygon.get() << " " << edge.edge << std::endl;
+    }
+    std::clog << std::endl;
 }
 void TilingApp::render() const {
 
@@ -217,6 +300,9 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
         }
         case GLFW_KEY_DELETE:
             removeAllPolygons();
+            break;
+        case GLFW_KEY_BACKSPACE:
+            removeLastPolygon();
             break;
     }
 }
