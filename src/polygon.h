@@ -47,7 +47,9 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     void debug() const;
 };
 
-static_assert(!std::is_copy_constructible<Polygon>::value);
-static_assert(!std::is_copy_assignable<Polygon>::value);
+static_assert(!std::is_copy_constructible<Polygon>::value,
+              "Polygon shouldn't be copy constructible.");
+static_assert(!std::is_copy_assignable<Polygon>::value,
+              "Polygon shouldn't be copy assignable.");
 
 #endif /* POLYGON_H */

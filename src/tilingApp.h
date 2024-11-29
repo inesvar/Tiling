@@ -68,7 +68,9 @@ class TilingApp {
                             int action, int mods);
 };
 
-static_assert(!std::is_copy_constructible<TilingApp>::value);
-static_assert(!std::is_copy_assignable<TilingApp>::value);
+static_assert(!std::is_copy_constructible<TilingApp>::value,
+              "TilingApp shouldn't be copy constructible.");
+static_assert(!std::is_copy_assignable<TilingApp>::value,
+              "TilingApp shouldn't be copy assignable.");
 
 #endif /* TILING_APP_H */

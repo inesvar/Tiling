@@ -5,7 +5,7 @@ project(main VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -Werror -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -Werror -Wpedantic -Weffc++ -g -D_GLIBCXX_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")

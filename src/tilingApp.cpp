@@ -137,23 +137,23 @@ void TilingApp::removeLastPolygon() {
         std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
             return (edge.polygon == lastPolygon);
         });
-    std::clog << "Left:" << left->polygon.get() << " " << left->edge
-              << std::endl;
     auto _right =
         std::find_if(edges.rbegin(), edges.rend(), [lastPolygon](Edge& edge) {
             return (edge.polygon == lastPolygon);
         });
-    std::clog << "_right:" << _right->polygon.get() << " " << _right->edge
-              << std::endl;
-    std::list<Edge>::const_iterator right = std::prev(_right.base());
-    std::clog << "Right:" << right->polygon.get() << " " << right->edge
-              << std::endl;
-    if (left == edges.end() || right == edges.end()) {
+    if (left == edges.end() || _right == edges.rend()) {
         // FIXME
         logError("Removal of a polygon with no accessible sides is not "
                  "implemented yet.");
         return;
     }
+    std::clog << "Left:" << left->polygon.get() << " " << left->edge
+              << std::endl;
+    std::clog << "_right:" << _right->polygon.get() << " " << _right->edge
+              << std::endl;
+    std::list<Edge>::const_iterator right = std::prev(_right.base());
+    std::clog << "Right:" << right->polygon.get() << " " << right->edge
+              << std::endl;
     if (left->edge > right->edge) {
         std::clog << "Circular list trouble." << std::endl;
         // Unfortunately lastPolygon edges aren't sequential as they span the

@@ -69,7 +69,6 @@ void Polygon::highlightEdge(const unsigned shaderProgram,
     glLineWidth(1.0);
 }
 
-
 void Polygon::underlineEdge(const unsigned shaderProgram,
                             const int edge) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
