@@ -148,7 +148,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
 } */
 
 void Polygon::initPoints() {
-    assert(nbSides >= 2 && nbSides <= 8);
+    assert(nbSides >= 2 && nbSides <= 10);
     points.resize(nbSides + 1);
     vec2 xy = vec2(-0.0f);
     float closingAngle = 2.0 * pi<double>() / nbSides;

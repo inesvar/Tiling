@@ -297,6 +297,14 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
         case GLFW_KEY_KP_8:
             addPolygon(8);
             break;
+        case GLFW_KEY_9:
+        case GLFW_KEY_KP_9:
+            addPolygon(9);
+            break;
+        case GLFW_KEY_0:
+        case GLFW_KEY_KP_0:
+            addPolygon(10);
+            break;
         case GLFW_KEY_TAB: {
             if (mods && GLFW_MOD_SHIFT) {
                 currentEdge = circularPrev(currentEdge);
