@@ -16,6 +16,7 @@ TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     initGlfwCallbacks();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
+    updateViewCenter();
     viewMatrix = glm::mat3x2(1.0);
     log(" was " GREEN "created" RESET ".");
 }
@@ -65,6 +66,7 @@ void TilingApp::addPolygon(int nbSides) {
             edges.emplace_back(polygons.back(), i);
         }
         currentEdge = edges.begin();
+        updateViewCenter();
     } else {
         // create new polygon
         polygons.emplace_back(new Polygon(nbSides));
@@ -110,6 +112,7 @@ void TilingApp::addPolygon(int nbSides) {
             edges.erase(circularPrev(left));
         }
         currentEdge = left;
+        updateViewCenter();
     }
 }
 
@@ -189,6 +192,7 @@ void TilingApp::removeLastPolygon() {
     }
     if (currentEdge->polygon == lastPolygon) {
         currentEdge = circularPrev(left);
+        updateViewCenter();
     }
     debug();
     std::clog << "currentEdge" << currentEdge->polygon.get() << " "
@@ -255,6 +259,7 @@ void TilingApp::removeAllPolygons() {
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     links.clear();
     currentEdge = edges.begin();
+    updateViewCenter();
 }
 
 std::list<Edge>::const_iterator
@@ -326,6 +331,7 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             } else {
                 currentEdge = circularNext(currentEdge);
             }
+            updateViewCenter();
             break;
         }
         case GLFW_KEY_DELETE:
@@ -365,4 +371,8 @@ void TilingApp::scrollCallback(GLFWwindow* window, double xoffset,
     auto* app = static_cast<TilingApp*>(ptr);
 
     app->handleScroll(xoffset, yoffset);
+}
+
+void TilingApp::updateViewCenter() {
+    viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
 }

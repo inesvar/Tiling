@@ -21,6 +21,8 @@ bool Edge::connectedTo(const Edge& other) const {
     return (distance1 < 1e-3) && (distance2 < 1e-3);
 };
 
+glm::vec2 Edge::getFirstVertex() const { return polygon->getVertex(edge); }
+
 std::size_t EdgeHash::operator()(const Edge& e) const {
     std::string text =
         std::to_string(reinterpret_cast<uintptr_t>(e.polygon.get())) +
