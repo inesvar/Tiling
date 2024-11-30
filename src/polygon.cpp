@@ -35,8 +35,8 @@ bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
         success = false;
     }
     neighbors[0] = other;
-    positionAt(other->position * vec3(other->points[edge + 1], 1.0),
-               other->position * vec3(other->points[edge], 1.0));
+    positionAt(other->modelMatrix * vec3(other->points[edge + 1], 1.0),
+               other->modelMatrix * vec3(other->points[edge], 1.0));
     log(" was " YELLOW "bound" RESET ".");
     return success;
 }
@@ -50,7 +50,7 @@ void Polygon::render(const unsigned shaderProgram,
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
     int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
-    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(modelMatrix));
     glBindVertexArray(vao);
     glDrawArrays(drawingMode, 0, nbSides);
     glUniform3f(colorUniform, 0.0, 0.0, 0.0);
@@ -62,7 +62,7 @@ void Polygon::highlightEdge(const unsigned shaderProgram,
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(cursorColor()));
     int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
-    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(modelMatrix));
     glBindVertexArray(vao);
     glLineWidth(5.0);
     glDrawArrays(GL_LINE_LOOP, edge, 2);
@@ -74,7 +74,7 @@ void Polygon::underlineEdge(const unsigned shaderProgram,
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3f(colorUniform, 0.0, 0.0, 0.0);
     int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
-    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(modelMatrix));
     glBindVertexArray(vao);
     glLineWidth(3.0);
     glDrawArrays(GL_LINE_LOOP, edge, 2);
@@ -86,23 +86,23 @@ void Polygon::underlineEdge(const unsigned shaderProgram,
 /// @param b
 void Polygon::positionAt(const vec2& a, const vec2& b) {
     vec2 diff = b - a;
-    position = mat3x2(diff.x, diff.y, -diff.y, diff.x, a.x, a.y);
+    modelMatrix = mat3x2(diff.x, diff.y, -diff.y, diff.x, a.x, a.y);
     // This transformation is :
     // scaling so that diff is a unit vector,
     // rotating so that diff is (1.0, 0.0),
     // and then translating so that a is (0.0, 0.0).
 }
 
-vec2 Polygon::getFirstVertex() const { return position[2]; }
-vec2 Polygon::getFirstEdge() const { return position[0] + position[2]; }
+vec2 Polygon::getFirstVertex() const { return modelMatrix[2]; }
+vec2 Polygon::getFirstEdge() const { return modelMatrix[0] + modelMatrix[2]; }
 vec2 Polygon::getVertex(const int vertex) const {
-    return position * vec3(points[vertex], 1.0);
+    return modelMatrix * vec3(points[vertex], 1.0);
 }
 
 void Polygon::debug() const {
     log(":");
-    std::clog << "Position: " << position[2].x << ", " << position[2].y
-              << "; Vector: " << position[0].x << ", " << position[0].y
+    std::clog << "Position: " << modelMatrix[2].x << ", " << modelMatrix[2].y
+              << "; Vector: " << modelMatrix[0].x << ", " << modelMatrix[0].y
               << std::endl;
     std::clog << "Neighbors:" << std::endl;
     for (auto& neighbor : neighbors) {
@@ -122,7 +122,7 @@ Polygon::~Polygon() {
 
 /* Polygon::Polygon(Polygon&& other)
     : nbSides(other.nbSides), points(std::move(other.points)),
-      position(std::move(other.position)), color(std::move(other.color)),
+      modelMatrix(std::move(other.modelMatrix)), color(std::move(other.color)),
       vbo(std::move(other.vbo)), vao(std::move(other.vao)),
       neighbors(std::move(other.neighbors)) {
     other.vao = 0;
@@ -134,7 +134,7 @@ Polygon& Polygon::operator=(Polygon&& other) {
     if (&other != this) {
         nbSides = other.nbSides;
         points = std::move(other.points);
-        position = std::move(other.position);
+        modelMatrix = std::move(other.modelMatrix);
         color = std::move(other.color);
         destroyGL((vbo != other.vbo), (vao != other.vao));
         vbo = std::move(other.vbo);

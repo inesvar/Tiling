@@ -16,7 +16,7 @@
 class Polygon : public std::enable_shared_from_this<Polygon> {
     // size: nbSides + 1, points[nbSides] ~= points[0]
     std::vector<glm::vec2> points{};
-    glm::mat3x2 position{};
+    glm::mat3x2 modelMatrix{};
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};
