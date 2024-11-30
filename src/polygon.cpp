@@ -49,7 +49,7 @@ void Polygon::render(const unsigned shaderProgram,
                      const GLenum drawingMode) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(color));
-    int positionUniform = glGetUniformLocation(shaderProgram, "position");
+    int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);
     glDrawArrays(drawingMode, 0, nbSides);
@@ -61,7 +61,7 @@ void Polygon::highlightEdge(const unsigned shaderProgram,
                             const int edge) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3fv(colorUniform, 1, value_ptr(cursorColor()));
-    int positionUniform = glGetUniformLocation(shaderProgram, "position");
+    int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);
     glLineWidth(5.0);
@@ -73,7 +73,7 @@ void Polygon::underlineEdge(const unsigned shaderProgram,
                             const int edge) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
     glUniform3f(colorUniform, 0.0, 0.0, 0.0);
-    int positionUniform = glGetUniformLocation(shaderProgram, "position");
+    int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(position));
     glBindVertexArray(vao);
     glLineWidth(3.0);
