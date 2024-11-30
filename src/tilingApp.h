@@ -5,6 +5,7 @@
 #include "polygon.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glm/mat3x2.hpp>
 #include <list>
 #include <memory>
 #include <unordered_map>
@@ -41,6 +42,7 @@ class TilingApp {
     std::list<Edge> edges{};
     std::unordered_map<Edge, Edge, EdgeHash> links{};
     std::list<Edge>::const_iterator currentEdge{};
+    glm::mat3x2 viewMatrix{};
 
     void log(const char* log) const;
     void initGlfwKeyCallback();
@@ -50,6 +52,9 @@ class TilingApp {
     circularNext(std::list<Edge>::const_iterator& edge) const;
     std::list<Edge>::const_iterator
     circularPrev(std::list<Edge>::const_iterator& edge) const;
+    void zoomIn();
+    void zoomOut();
+    void translate(const glm::vec2& direction);
 
   public:
     TilingApp(GLFWwindow* window);

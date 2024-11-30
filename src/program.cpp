@@ -9,9 +9,11 @@ static const char* minimalVertexShader =
     "layout (location = 0) in vec2 points;\n"
     "// location is the id of the vertex attribute\n"
     "uniform mat3x2 position3x2;\n"
+    "uniform mat3x2 view3x2;\n"
     "void main() {\n"
     "    mat3 position = mat3(position3x2);\n"
-    "    vec3 pos = position * vec3(points, 1.0);\n"
+    "    mat3 view = mat3(view3x2);\n"
+    "    vec3 pos = view * position * vec3(points, 1.0);\n"
     "    gl_Position = vec4(pos.xy, 0.0, 1.0);\n"
     "}\n";
 

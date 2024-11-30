@@ -2,11 +2,13 @@
 #include "edge.h"
 #include "program.h"
 #include "utils.h"
+#include <algorithm>
 #include <cassert>
+#include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <algorithm>
-#include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/mat3x2.hpp>
 #include <iostream>
 
 TilingApp::TilingApp(GLFWwindow* window) : window(window) {
@@ -14,6 +16,7 @@ TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     initGlfwKeyCallback();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
+    viewMatrix = glm::mat3x2(1.0);
     log(" was " GREEN "created" RESET ".");
 }
 
@@ -215,6 +218,9 @@ void TilingApp::render() const {
     } */
 
     glUseProgram(shaderProgram);
+    int positionUniform = glGetUniformLocation(shaderProgram, "view3x2");
+    glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(viewMatrix));
+
     for (auto& polygon : polygons) {
         polygon->render(shaderProgram);
     }
@@ -268,6 +274,14 @@ TilingApp::circularPrev(std::list<Edge>::const_iterator& edge) const {
     return std::prev(toDecrement);
 }
 
+void TilingApp::zoomIn() { viewMatrix *= 2.0; }
+
+void TilingApp::zoomOut() { viewMatrix /= 2.0; }
+
+void TilingApp::translate(const glm::vec2& direction) {
+    viewMatrix[2] -= direction * viewMatrix[0].x;
+}
+
 void TilingApp::handleKeyPress(const int key, const int mods) {
     switch (key) {
         case GLFW_KEY_ESCAPE:
@@ -318,6 +332,19 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             break;
         case GLFW_KEY_BACKSPACE:
             removeLastPolygon();
+            break;
+        case GLFW_KEY_KP_ADD:
+            zoomIn();
+            break;
+        case GLFW_KEY_KP_SUBTRACT:
+            zoomOut();
+            break;
+        // TODO use the mouse instead
+        case GLFW_KEY_H:
+            translate(glm::vec2(0.0, 0.5));
+            break;
+        case GLFW_KEY_L:
+            translate(glm::vec2(0.0, -0.5));
             break;
     }
 }
