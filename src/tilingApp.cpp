@@ -53,7 +53,7 @@ void TilingApp::addPolygon(int nbSides) {
             newEdges.emplace_back(polygons.back(), i);
         }
         // store the new edges in `edges` (between iterators `left` and `right`)
-        std::list<Edge>::const_iterator right = circularNext(currentEdge);
+        auto right = circularNext(currentEdge);
         std::list<Edge>::const_iterator left =
             edges.insert(right, newEdges.begin(), newEdges.end());
         // for any consecutive overlapping edges
@@ -119,7 +119,7 @@ void TilingApp::removeLastPolygon() {
         std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
             return (edge.polygon == lastPolygon);
         });
-    auto _right =
+    std::list<Edge>::const_reverse_iterator _right =
         std::find_if(edges.rbegin(), edges.rend(), [lastPolygon](Edge& edge) {
             return (edge.polygon == lastPolygon);
         });
@@ -133,14 +133,14 @@ void TilingApp::removeLastPolygon() {
               << std::endl;
     std::clog << "_right:" << _right->polygon.get() << " " << _right->edge
               << std::endl;
-    std::list<Edge>::const_iterator right = std::prev(_right.base());
+    auto right = std::prev(_right.base());
     std::clog << "Right:" << right->polygon.get() << " " << right->edge
               << std::endl;
     if (left->edge > right->edge) {
         std::clog << "Circular list trouble." << std::endl;
         // Unfortunately lastPolygon edges aren't sequential as they span the
         // end and begining of the list.
-        std::list<Edge>::const_iterator futureRight =
+        auto futureRight =
             std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
                 return (edge.polygon != lastPolygon);
             });
@@ -234,7 +234,7 @@ void TilingApp::removeAllPolygons() {
 
 std::list<Edge>::const_iterator
 TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
-    std::list<Edge>::const_iterator incremented = std::next(edge);
+    auto incremented = std::next(edge);
     if (incremented == edges.cend()) {
         incremented = edges.cbegin();
     }
@@ -243,7 +243,7 @@ TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
 
 std::list<Edge>::const_iterator
 TilingApp::circularPrev(std::list<Edge>::const_iterator& edge) const {
-    std::list<Edge>::const_iterator toDecrement = edge;
+    auto toDecrement = edge;
     if (toDecrement == edges.cbegin()) {
         toDecrement = edges.cend();
     }
