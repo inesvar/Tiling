@@ -63,8 +63,6 @@ class TilingApp {
     ~TilingApp();
     TilingApp(const TilingApp&) = delete;
     TilingApp& operator=(const TilingApp&) = delete;
-    /* TilingApp(TilingApp&&);
-    TilingApp& operator=(TilingApp&&); */
     void addPolygon(int nbSides);
     void removeAllPolygons();
     void removeLastPolygon();
@@ -81,5 +79,9 @@ static_assert(!std::is_copy_constructible<TilingApp>::value,
               "TilingApp shouldn't be copy constructible.");
 static_assert(!std::is_copy_assignable<TilingApp>::value,
               "TilingApp shouldn't be copy assignable.");
+static_assert(!std::is_move_constructible<TilingApp>::value,
+              "TilingApp shouldn't be move constructible.");
+static_assert(!std::is_move_assignable<TilingApp>::value,
+              "TilingApp shouldn't be move assignable.");
 
 #endif /* TILING_APP_H */

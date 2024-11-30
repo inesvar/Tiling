@@ -51,5 +51,9 @@ static_assert(!std::is_copy_constructible<Polygon>::value,
               "Polygon shouldn't be copy constructible.");
 static_assert(!std::is_copy_assignable<Polygon>::value,
               "Polygon shouldn't be copy assignable.");
+static_assert(!std::is_move_constructible<Polygon>::value,
+              "Polygon shouldn't be move constructible.");
+static_assert(!std::is_move_assignable<Polygon>::value,
+              "Polygon shouldn't be move assignable.");
 
 #endif /* POLYGON_H */

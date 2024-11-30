@@ -120,33 +120,6 @@ Polygon::~Polygon() {
     log(" was " RED "deleted" RESET ".");
 }
 
-/* Polygon::Polygon(Polygon&& other)
-    : nbSides(other.nbSides), points(std::move(other.points)),
-      modelMatrix(std::move(other.modelMatrix)), color(std::move(other.color)),
-      vbo(std::move(other.vbo)), vao(std::move(other.vao)),
-      neighbors(std::move(other.neighbors)) {
-    other.vao = 0;
-    other.vbo = 0;
-    log(" was " BLUE "created using move" RESET ".");
-}
-
-Polygon& Polygon::operator=(Polygon&& other) {
-    if (&other != this) {
-        nbSides = other.nbSides;
-        points = std::move(other.points);
-        modelMatrix = std::move(other.modelMatrix);
-        color = std::move(other.color);
-        destroyGL((vbo != other.vbo), (vao != other.vao));
-        vbo = std::move(other.vbo);
-        vao = std::move(other.vao);
-        other.vao = 0;
-        other.vbo = 0;
-        neighbors = std::move(other.neighbors);
-    }
-    log(" was " BLUE "assigned using move" RESET ".");
-    return *this;
-} */
-
 void Polygon::initPoints() {
     assert(nbSides >= 2 && nbSides <= 10);
     points.resize(nbSides + 1);

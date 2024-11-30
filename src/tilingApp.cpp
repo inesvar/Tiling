@@ -27,30 +27,6 @@ TilingApp::~TilingApp() {
     log(" was " RED "deleted" RESET ".");
 }
 
-/* TilingApp::TilingApp(TilingApp&& other)
-    : polygons(std::move(other.polygons)), shaderProgram(other.shaderProgram),
-      window(std::move(other.window)), edges(std::move(other.edges)),
-      currentEdge(std::move(other.currentEdge)) {
-    other.shaderProgram = 0;
-    initGlfwCallbacks();
-    log(" was " BLUE "created using move" RESET ".");
-}
-
-TilingApp& TilingApp::operator=(TilingApp&& other) {
-    if (&other != this) {
-        polygons = std::move(other.polygons);
-        destroyGL((shaderProgram == other.shaderProgram));
-        shaderProgram = other.shaderProgram;
-        other.shaderProgram = 0;
-        window = std::move(other.window);
-        edges = std::move(other.edges);
-        currentEdge = std::move(other.currentEdge);
-        initGlfwCallbacks();
-    }
-    log(" was " BLUE "assigned using move" RESET ".");
-    return *this;
-} */
-
 /// @brief Create a Polygon with `nbSides` on the position of `currentEdge`.
 /// The new polygon sides are stored in `edges` or `links`.
 ///
@@ -213,13 +189,7 @@ void TilingApp::debug() const {
 }
 void TilingApp::render() const {
 
-    // double time = glfwGetTime();
     glClear(GL_COLOR_BUFFER_BIT);
-    /* for (auto& polygon : polygons) {
-        polygon->positionAt(polygon->getFirstVertex(),
-                            rotate(0.031415, polygon->getFirstEdge()) +
-                                polygon->getFirstVertex());
-    } */
 
     glUseProgram(shaderProgram);
     int positionUniform = glGetUniformLocation(shaderProgram, "view3x2");
