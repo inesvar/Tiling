@@ -17,7 +17,6 @@ using namespace glm;
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
     color = nextColor();
     initPoints();
-    neighbors.resize(nbSides);
     initGL();
     positionAt(a, b);
     log(" was " GREEN "created" RESET ".");
@@ -28,13 +27,6 @@ Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
 /// @param edge defaults to 0
 bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
     bool success = true;
-    try {
-        other->neighbors[edge] = shared_from_this();
-    } catch (const std::exception& e) {
-        logError(e.what());
-        success = false;
-    }
-    neighbors[0] = other;
     positionAt(other->modelMatrix * vec3(other->points[edge + 1], 1.0),
                other->modelMatrix * vec3(other->points[edge], 1.0));
     log(" was " YELLOW "bound" RESET ".");
@@ -104,15 +96,6 @@ void Polygon::debug() const {
     std::clog << "Position: " << modelMatrix[2].x << ", " << modelMatrix[2].y
               << "; Vector: " << modelMatrix[0].x << ", " << modelMatrix[0].y
               << std::endl;
-    std::clog << "Neighbors:" << std::endl;
-    for (auto& neighbor : neighbors) {
-        if (neighbor.lock() == nullptr) {
-            std::clog << "nullptr" << std::endl;
-        } else {
-            neighbor.lock()->log("");
-        }
-    }
-    std::clog << std::endl;
 }
 
 Polygon::~Polygon() {

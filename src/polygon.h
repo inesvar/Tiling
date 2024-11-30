@@ -20,7 +20,6 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     glm::vec3 color{};
     unsigned vbo{};
     unsigned vao{};
-    std::vector<std::weak_ptr<Polygon>> neighbors{};
     void initPoints();
     void initGL();
     void destroyGL(const bool destroyVbo = true, const bool destroyVao = true);
