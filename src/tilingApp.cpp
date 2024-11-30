@@ -330,7 +330,7 @@ void TilingApp::keyCallback(GLFWwindow* window, int key,
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);
 
-    if (action == GLFW_PRESS) {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         app->handleKeyPress(key, mods);
     }
 }
