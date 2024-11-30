@@ -13,7 +13,7 @@
 
 TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     assert(createMinimalProgram(shaderProgram));
-    initGlfwKeyCallback();
+    initGlfwCallbacks();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
     viewMatrix = glm::mat3x2(1.0);
@@ -31,7 +31,7 @@ TilingApp::~TilingApp() {
       window(std::move(other.window)), edges(std::move(other.edges)),
       currentEdge(std::move(other.currentEdge)) {
     other.shaderProgram = 0;
-    initGlfwKeyCallback();
+    initGlfwCallbacks();
     log(" was " BLUE "created using move" RESET ".");
 }
 
@@ -44,7 +44,7 @@ TilingApp& TilingApp::operator=(TilingApp&& other) {
         window = std::move(other.window);
         edges = std::move(other.edges);
         currentEdge = std::move(other.currentEdge);
-        initGlfwKeyCallback();
+        initGlfwCallbacks();
     }
     log(" was " BLUE "assigned using move" RESET ".");
     return *this;
@@ -243,9 +243,10 @@ void TilingApp::destroyGL(const bool destroyProgram) {
     }
 }
 
-void TilingApp::initGlfwKeyCallback() {
+void TilingApp::initGlfwCallbacks() {
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, TilingApp::keyCallback);
+    glfwSetScrollCallback(window, TilingApp::scrollCallback);
 }
 
 void TilingApp::removeAllPolygons() {
@@ -339,14 +340,11 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
         case GLFW_KEY_KP_SUBTRACT:
             zoomOut();
             break;
-        // TODO use the mouse instead
-        case GLFW_KEY_H:
-            translate(glm::vec2(0.0, 0.5));
-            break;
-        case GLFW_KEY_L:
-            translate(glm::vec2(0.0, -0.5));
-            break;
     }
+}
+
+void TilingApp::handleScroll(const double xoffset, const double yoffset) {
+    translate(0.05f * glm::vec2(-xoffset, yoffset));
 }
 
 void TilingApp::keyCallback(GLFWwindow* window, int key,
@@ -359,4 +357,12 @@ void TilingApp::keyCallback(GLFWwindow* window, int key,
     if (action == GLFW_PRESS) {
         app->handleKeyPress(key, mods);
     }
+}
+
+void TilingApp::scrollCallback(GLFWwindow* window, double xoffset,
+                               double yoffset) {
+    void* ptr = glfwGetWindowUserPointer(window);
+    auto* app = static_cast<TilingApp*>(ptr);
+
+    app->handleScroll(xoffset, yoffset);
 }

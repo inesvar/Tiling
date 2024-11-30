@@ -45,9 +45,10 @@ class TilingApp {
     glm::mat3x2 viewMatrix{};
 
     void log(const char* log) const;
-    void initGlfwKeyCallback();
+    void initGlfwCallbacks();
     void destroyGL(const bool destroyProgram = true);
     void handleKeyPress(const int key, const int mods);
+    void handleScroll(const double xoffset, const double yoffset);
     std::list<Edge>::const_iterator
     circularNext(std::list<Edge>::const_iterator& edge) const;
     std::list<Edge>::const_iterator
@@ -71,6 +72,8 @@ class TilingApp {
 
     static void keyCallback(GLFWwindow* window, int key, int scancode,
                             int action, int mods);
+    static void scrollCallback(GLFWwindow* window, double xoffset,
+                               double yoffset);
 };
 
 static_assert(!std::is_copy_constructible<TilingApp>::value,

@@ -18,7 +18,7 @@ bool Edge::connectedTo(const Edge& other) const {
     float distance1 = glm::distance(other_a, this_b);
     float distance2 = glm::distance(other_b, this_a);
     std::clog << distance1 << ", " << distance2 << std::endl;
-    return (distance1 < 1e-5) && (distance2 < 1e-5);
+    return (distance1 < 1e-3) && (distance2 < 1e-3);
 };
 
 std::size_t EdgeHash::operator()(const Edge& e) const {
