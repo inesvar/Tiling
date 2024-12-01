@@ -15,7 +15,6 @@ using namespace glm;
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (0.2, 0.0)
 Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
-    color = nextColor();
     initPoints();
     initGL();
     positionAt(a, b);
@@ -84,6 +83,10 @@ void Polygon::positionAt(const vec2& a, const vec2& b) {
     // rotating so that diff is (1.0, 0.0),
     // and then translating so that a is (0.0, 0.0).
 }
+
+void Polygon::setColor(const PolygonColor& color) { this->color = color; }
+
+int Polygon::getColorIndex() const { return static_cast<int>(this->color); }
 
 vec2 Polygon::getFirstVertex() const { return modelMatrix[2]; }
 vec2 Polygon::getFirstEdge() const { return modelMatrix[0] + modelMatrix[2]; }

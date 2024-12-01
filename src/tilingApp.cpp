@@ -43,6 +43,7 @@ void TilingApp::addPolygon(int nbSides) {
         }
         currentEdge = edges.begin();
         updateViewCenter();
+        polygons.back()->setColor(static_cast<PolygonColor>(0));
     } else {
         // create new polygon
         polygons.emplace_back(new Polygon(nbSides));
@@ -56,11 +57,15 @@ void TilingApp::addPolygon(int nbSides) {
         auto right = circularNext(currentEdge);
         std::list<Edge>::const_iterator left =
             edges.insert(right, newEdges.begin(), newEdges.end());
+        std::vector<bool> neighborColors(11, true);
         // for any consecutive overlapping edges
         // (1) update `links` (insert the two overlapping edges)
         // (2) update `edges` (remove the two overlapping edges)
         // /!\ pay attention not to invalidate `left`
         while (right->connectedTo(*circularPrev(right))) {
+            if (circularPrev(right)->polygon == polygons.back()) {
+                neighborColors[right->polygon->getColorIndex()] = false;
+            }
             // cf (1)
             links.emplace(*right, *circularPrev(right));
             links.emplace(*circularPrev(right), *right);
@@ -79,6 +84,10 @@ void TilingApp::addPolygon(int nbSides) {
             edges.erase(circularPrev(right));
         }
         while (left->connectedTo(*circularPrev(left))) {
+            if (left->polygon == polygons.back()) {
+                neighborColors[circularPrev(left)->polygon->getColorIndex()] =
+                    false;
+            }
             // cf (1)
             links.emplace(*left, *circularPrev(left));
             links.emplace(*circularPrev(left), *left);
@@ -89,6 +98,15 @@ void TilingApp::addPolygon(int nbSides) {
         }
         currentEdge = left;
         updateViewCenter();
+        /* for (auto aha : neighborColors) {
+            std::clog << aha << ", ";
+        }
+        std::clog << std::endl; */
+        int idx = 0;
+        while (!neighborColors[idx]) {
+            idx++;
+        }
+        polygons.back()->setColor(static_cast<PolygonColor>(idx));
     }
 }
 

@@ -45,6 +45,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     glm::vec2 getFirstEdge() const;
     glm::vec2 getVertex(const int vertex) const;
     void debug() const;
+    void setColor(const PolygonColor& color);
+    int getColorIndex() const;
 };
 
 static_assert(!std::is_copy_constructible<Polygon>::value,
