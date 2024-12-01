@@ -40,7 +40,7 @@ bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
 void Polygon::render(const unsigned shaderProgram,
                      const GLenum drawingMode) const {
     int colorUniform = glGetUniformLocation(shaderProgram, "color");
-    glUniform3fv(colorUniform, 1, value_ptr(color));
+    glUniform3fv(colorUniform, 1, value_ptr(getColor(color)));
     int positionUniform = glGetUniformLocation(shaderProgram, "position3x2");
     glUniformMatrix3x2fv(positionUniform, 1, GL_FALSE, value_ptr(modelMatrix));
     glBindVertexArray(vao);

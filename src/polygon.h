@@ -1,6 +1,7 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
+#include "utils.h"
 #include <glad/glad.h>
 #include <glm/mat3x2.hpp>
 #include <glm/vec2.hpp>
@@ -17,7 +18,7 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     // size: nbSides + 1, points[nbSides] ~= points[0]
     std::vector<glm::vec2> points{};
     glm::mat3x2 modelMatrix{};
-    glm::vec3 color{};
+    PolygonColor color{};
     unsigned vbo{};
     unsigned vao{};
     void initPoints();
