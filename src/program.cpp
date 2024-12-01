@@ -10,11 +10,12 @@ static const char* minimalVertexShader =
     "// location is the id of the vertex attribute\n"
     "uniform mat3x2 position3x2;\n"
     "uniform mat3x2 view3x2;\n"
+    "uniform vec2 windowSize;\n"
     "void main() {\n"
     "    mat3 position = mat3(position3x2);\n"
     "    mat3 view = mat3(view3x2);\n"
     "    vec3 pos = view * position * vec3(points, 1.0);\n"
-    "    gl_Position = vec4(pos.xy, 0.0, 1.0);\n"
+    "    gl_Position = vec4(pos.xy * windowSize, 0.0, 1.0);\n"
     "}\n";
 
 /// @brief Color fragment using uniform vec3 `color`.

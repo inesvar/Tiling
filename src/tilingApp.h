@@ -73,6 +73,8 @@ class TilingApp {
                             int action, int mods);
     static void scrollCallback(GLFWwindow* window, double xoffset,
                                double yoffset);
+    static void framebufferSizeCallback(GLFWwindow* window, int width,
+                                        int height);
 };
 
 static_assert(!std::is_copy_constructible<TilingApp>::value,

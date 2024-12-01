@@ -13,6 +13,9 @@
 
 TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     assert(createMinimalProgram(shaderProgram));
+    glUseProgram(shaderProgram);
+    int positionUniform = glGetUniformLocation(shaderProgram, "windowSize");
+    glUniform2f(positionUniform, 1.0, 1.0);
     initGlfwCallbacks();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
@@ -239,6 +242,7 @@ void TilingApp::initGlfwCallbacks() {
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, TilingApp::keyCallback);
     glfwSetScrollCallback(window, TilingApp::scrollCallback);
+    glfwSetFramebufferSizeCallback(window, TilingApp::framebufferSizeCallback);
 }
 
 void TilingApp::removeAllPolygons() {
@@ -363,4 +367,17 @@ void TilingApp::scrollCallback(GLFWwindow* window, double xoffset,
 
 void TilingApp::updateViewCenter() {
     viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
+}
+
+void TilingApp::framebufferSizeCallback(__attribute__((unused))
+                                        GLFWwindow* window,
+                                        int width, int height) {
+    glViewport(0, 0, width, height);
+    void* ptr = glfwGetWindowUserPointer(window);
+    auto* app = static_cast<TilingApp*>(ptr);
+    glUseProgram(app->shaderProgram);
+    int positionUniform =
+        glGetUniformLocation(app->shaderProgram, "windowSize");
+    float smallerSide = std::min(width, height);
+    glUniform2f(positionUniform, smallerSide / width, smallerSide / height);
 }

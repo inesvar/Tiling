@@ -39,7 +39,6 @@ int main() {
         return -1;
     }
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSwapInterval(1);
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
@@ -64,12 +63,6 @@ int main() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
-}
-
-void framebufferSizeCallback(__attribute__((unused)) GLFWwindow* window,
-                             int width, int height) {
-    // NOTE: this probably only works with one window...
-    glViewport(0, 0, width, height);
 }
 
 std::string getWindowTitle() {
