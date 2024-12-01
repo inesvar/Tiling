@@ -23,6 +23,8 @@ enum PolygonColor {
     white
 };
 
+extern int DEFAULT_WINDOW_SIZE;
+
 glm::vec2 rotate(float radianAngle,
                  const glm::vec2& vector = glm::vec2(1.0, 0.0));
 PolygonColor nextColor();

@@ -5,6 +5,8 @@
 
 using namespace glm;
 
+int DEFAULT_WINDOW_SIZE = 800;
+
 /// @brief Rotate `point` by `radianAngle` around `(0, 0)`.
 /// @param radianAngle
 /// @param point defaults to (0, 1)

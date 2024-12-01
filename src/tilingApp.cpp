@@ -243,6 +243,7 @@ void TilingApp::initGlfwCallbacks() {
     glfwSetKeyCallback(window, TilingApp::keyCallback);
     glfwSetScrollCallback(window, TilingApp::scrollCallback);
     glfwSetFramebufferSizeCallback(window, TilingApp::framebufferSizeCallback);
+    glfwSetWindowMaximizeCallback(window, TilingApp::windowMaximizeCallback);
 }
 
 void TilingApp::removeAllPolygons() {
@@ -380,4 +381,14 @@ void TilingApp::framebufferSizeCallback(__attribute__((unused))
         glGetUniformLocation(app->shaderProgram, "windowSize");
     float smallerSide = std::min(width, height);
     glUniform2f(positionUniform, smallerSide / width, smallerSide / height);
+}
+void TilingApp::windowMaximizeCallback(GLFWwindow* window, int maximized) {
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    if (maximized) {
+        glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width,
+                             mode->height, mode->refreshRate);
+    } else {
+        glfwSetWindowMonitor(window, NULL, 0, 0, DEFAULT_WINDOW_SIZE,
+                             DEFAULT_WINDOW_SIZE, mode->refreshRate);
+    }
 }

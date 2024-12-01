@@ -75,6 +75,7 @@ class TilingApp {
                                double yoffset);
     static void framebufferSizeCallback(GLFWwindow* window, int width,
                                         int height);
+    static void windowMaximizeCallback(GLFWwindow* window, int maximized);
 };
 
 static_assert(!std::is_copy_constructible<TilingApp>::value,
