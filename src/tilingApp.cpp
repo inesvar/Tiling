@@ -288,35 +288,43 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             break;
         case GLFW_KEY_3:
         case GLFW_KEY_KP_3:
-            addPolygon(3);
+            addPolygon(3 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_4:
         case GLFW_KEY_KP_4:
-            addPolygon(4);
+            addPolygon(4 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_5:
         case GLFW_KEY_KP_5:
-            addPolygon(5);
+            addPolygon(5 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_6:
         case GLFW_KEY_KP_6:
-            addPolygon(6);
+            addPolygon(6 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_7:
         case GLFW_KEY_KP_7:
-            addPolygon(7);
+            addPolygon(7 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_8:
         case GLFW_KEY_KP_8:
-            addPolygon(8);
+            addPolygon(8 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_9:
         case GLFW_KEY_KP_9:
-            addPolygon(9);
+            addPolygon(9 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_0:
         case GLFW_KEY_KP_0:
-            addPolygon(10);
+            addPolygon(10 + 10 * (mods & GLFW_MOD_SHIFT));
+            break;
+        case GLFW_KEY_1:
+        case GLFW_KEY_KP_1:
+            addPolygon(11 + 10 * (mods & GLFW_MOD_SHIFT));
+            break;
+        case GLFW_KEY_2:
+        case GLFW_KEY_KP_2:
+            addPolygon(12 + 10 * (mods & GLFW_MOD_SHIFT));
             break;
         case GLFW_KEY_TAB: {
             if (mods && GLFW_MOD_SHIFT) {
