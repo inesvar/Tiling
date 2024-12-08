@@ -42,15 +42,6 @@ int main() {
 
     {
         std::unique_ptr<TilingApp> app(new TilingApp(window));
-
-        // Testing move assignment
-        // std::shared_ptr<TilingApp> app2(new TilingApp(window));
-        // std::shared_ptr<TilingApp> app(new TilingApp(window));
-        // *app = std::move(*app2);
-        // Testing move construction
-        // std::shared_ptr<TilingApp> app2(new TilingApp(window));
-        // std::shared_ptr<TilingApp> app(new TilingApp(std::move(*app2)));
-
         app->debug();
 
         while (!glfwWindowShouldClose(window)) {
