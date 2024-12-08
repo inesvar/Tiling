@@ -237,9 +237,9 @@ void TilingApp::destroyGL(const bool destroyProgram) {
 void TilingApp::initGlfwCallbacks() {
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, TilingApp::keyCallback);
-    glfwSetScrollCallback(window, TilingApp::scrollCallback);
     glfwSetFramebufferSizeCallback(window, TilingApp::framebufferSizeCallback);
     glfwSetWindowMaximizeCallback(window, TilingApp::windowMaximizeCallback);
+    glfwSetCursorPosCallback(window, TilingApp::cursorPosCallback);
 }
 
 void TilingApp::removeAllPolygons() {
@@ -358,16 +358,23 @@ void TilingApp::keyCallback(GLFWwindow* window, int key,
     }
 }
 
-void TilingApp::scrollCallback(GLFWwindow* window, double xoffset,
-                               double yoffset) {
+void TilingApp::updateViewCenter() {
+    viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
+}
+
+void TilingApp::cursorPosCallback(__attribute__((unused)) GLFWwindow* window,
+                                  double xpos, double ypos) {
+    static double xposPrevious = 0.0;
+    static double yposPrevious = 0.0;
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);
 
-    app->handleScroll(xoffset, yoffset);
-}
-
-void TilingApp::updateViewCenter() {
-    viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
+    if (xposPrevious != 0.0 || yposPrevious != 0.0) {
+        app->handleScroll((xpos - xposPrevious) / 30.0,
+                          (ypos - yposPrevious) / 30.0);
+    }
+    xposPrevious = xpos;
+    yposPrevious = ypos;
 }
 
 void TilingApp::framebufferSizeCallback(__attribute__((unused))

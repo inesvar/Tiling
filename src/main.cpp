@@ -39,6 +39,12 @@ int main() {
     glViewport(0, 0, DEFAULT_WINDOW_SIZE, DEFAULT_WINDOW_SIZE);
     glfwSwapInterval(1);
     glClearColor(1.0, 1.0, 1.0, 1.0);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (glfwRawMouseMotionSupported()) {
+        glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    } else {
+        logError("Raw mouse input not supported");
+    }
 
     {
         std::unique_ptr<TilingApp> app(new TilingApp(window));

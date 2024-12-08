@@ -2,7 +2,7 @@
 
 A desktop app to create tilings using convex regular polygons.
 
-![A fullscreen screenshot of a plane tiling using dodecagons, hexagons and squares](images/screenshot1.png)
+![A fullscreen screenshot of a plane tiling using dodecagons, hexagons, squares and triangles](images/screenshot1.png)
 
 ![A fullscreen screenshot of an icosagon (or 20-gon) surrounded by pentagons and squares](images/screenshot2.png)
 
@@ -45,9 +45,9 @@ Add a polygon on the edge cursor by pressing keys `3` to `9` (keys on the numpad
 
 `Backspace` removes the last polygon. Note that this won't work if the last polygon filled a blank and all of its edges overlap an existing one.
 
-Use `+` and `-` on the numpad to zoom in and out.
+Mouse movements move the camera.
 
-On a laptop, two-finger scrolling moves the camera.
+Use `+` and `-` on the numpad to zoom in and out.
 
 ## Some math: Vertex tilings
 
