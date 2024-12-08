@@ -19,7 +19,6 @@ TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     initGlfwCallbacks();
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
-    updateViewCenter();
     viewMatrix = glm::mat3x2(1.0);
     log(" was " GREEN "created" RESET ".");
 }
@@ -45,7 +44,6 @@ void TilingApp::addPolygon(int nbSides) {
             edges.emplace_back(polygons.back(), i);
         }
         currentEdge = edges.begin();
-        updateViewCenter();
         polygons.back()->setColor(static_cast<PolygonColor>(0));
     } else {
         // create new polygon
@@ -100,7 +98,6 @@ void TilingApp::addPolygon(int nbSides) {
             edges.erase(circularPrev(left));
         }
         currentEdge = left;
-        updateViewCenter();
         /* for (auto aha : neighborColors) {
             std::clog << aha << ", ";
         }
@@ -189,7 +186,6 @@ void TilingApp::removeLastPolygon() {
     }
     if (currentEdge->polygon == lastPolygon) {
         currentEdge = circularPrev(left);
-        updateViewCenter();
     }
     debug();
     std::clog << "currentEdge" << currentEdge->polygon.get() << " "
@@ -329,7 +325,6 @@ void TilingApp::handleKeyPress(const int key, const int mods) {
             } else {
                 currentEdge = circularNext(currentEdge);
             }
-            updateViewCenter();
             break;
         }
         case GLFW_KEY_DELETE:
