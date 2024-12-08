@@ -283,9 +283,6 @@ void TilingApp::translate(const glm::vec2& direction) {
 
 void TilingApp::handleKeyPress(const int key, const int mods) {
     switch (key) {
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, true);
-            break;
         case GLFW_KEY_3:
         case GLFW_KEY_KP_3:
             addPolygon(3 + 10 * (mods & GLFW_MOD_SHIFT));

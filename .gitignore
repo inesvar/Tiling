@@ -1,3 +1,5 @@
 debug
-release
+release/*
+!release/main
 .vscode
+*.pdf
