@@ -13,6 +13,7 @@ A desktop app to create tilings using convex regular polygons.
 3. [Keybindings](#keybindings)
 4. [Some math: Vertex tilings](#some-math-vertex-tilings)
 5. [How the app determines if edges overlap](#how-the-app-determines-if-edges-overlap)
+6. [Linux dependencies](#Linux-dependencies)
 
 ## Running
 
@@ -35,15 +36,21 @@ cmake --build .
 ./main
 ```
 
+To compile on windows, checkout branch `windows` and build using Visual Studio.
+
 ## Keybindings
 
 **`Del` removes all the polygons.**
 
 Move the edge cursor by pressing `Tab` or `Shift+Tab`.
 
-Add a polygon on the edge cursor by pressing keys `3` to `9` (keys on the numpad also work). Keys `0` to `2` create polygons with 10 to 12 sides. Pressing `Shift` adds 10 sides to the polygon (so pressing `Shift` and `0` creates a polygon with 20 sides).
+Add a polygon on the edge cursor by pressing keys `3` to `9` (keys on the numpad also work).
+Keys `0` to `2` create polygons with 10 to 12 sides.
+Pressing `Shift` adds 10 sides to the polygon (so pressing `Shift` and `0` creates a polygon with 20 sides),
+but only on Linux.
 
-`Backspace` removes the last polygon. Note that this won't work if the last polygon filled a blank and all of its edges overlap an existing one.
+`Backspace` removes the last polygon.
+Note that this won't work if the last polygon filled a blank (ie if all of its edges overlap with already existing ones).
 
 Mouse movements move the camera.
 
@@ -70,3 +77,10 @@ Note that all vertex tilings can't tile the plane. Namely, it's impossible to us
 This app uses a very crude method to determine whether edges overlap : it checks that the distance between both pairs of vertices is smaller than 1e-3 (edges have a length of 0.2). Using a smaller threshold would mean that the first non-recognized overlap happens sooner.
 
 I didn't encounter a situation where the system mistakenly says there's an overlap: however such a situation might exist.
+
+## Linux dependencies
+
+Non-exhaustive list:
+```
+cmake build-essential libgl1-mesa-dev libglfw3-dev libglm-dev
+```
