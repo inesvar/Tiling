@@ -3,3 +3,5 @@ release/*
 !release/main
 .vscode
 *.pdf
+.vs
+out

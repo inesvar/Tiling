@@ -346,9 +346,8 @@ void TilingApp::handleScroll(const double xoffset, const double yoffset) {
     translate(0.05f * glm::vec2(-xoffset, yoffset));
 }
 
-void TilingApp::keyCallback(GLFWwindow* window, int key,
-                            __attribute__((unused)) int scancode,
-                            __attribute__((unused)) int action, int mods) {
+void TilingApp::keyCallback(GLFWwindow* window, int key, int scancode,
+                            int action, int mods) {
 
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);
@@ -362,8 +361,8 @@ void TilingApp::updateViewCenter() {
     viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
 }
 
-void TilingApp::cursorPosCallback(__attribute__((unused)) GLFWwindow* window,
-                                  double xpos, double ypos) {
+void TilingApp::cursorPosCallback(GLFWwindow* window, double xpos,
+                                  double ypos) {
     static double xposPrevious = 0.0;
     static double yposPrevious = 0.0;
     void* ptr = glfwGetWindowUserPointer(window);
@@ -377,9 +376,8 @@ void TilingApp::cursorPosCallback(__attribute__((unused)) GLFWwindow* window,
     yposPrevious = ypos;
 }
 
-void TilingApp::framebufferSizeCallback(__attribute__((unused))
-                                        GLFWwindow* window,
-                                        int width, int height) {
+void TilingApp::framebufferSizeCallback(GLFWwindow* window, int width,
+                                        int height) {
     glViewport(0, 0, width, height);
     void* ptr = glfwGetWindowUserPointer(window);
     auto* app = static_cast<TilingApp*>(ptr);

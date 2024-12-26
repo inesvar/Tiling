@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/color_space.hpp>
 #include <iostream>
 
