@@ -21,6 +21,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
     PolygonColor color{};
     unsigned vbo{};
     unsigned vao{};
+    bool verbose = true;
+
     void initPoints();
     void initGL();
     void destroyGL(const bool destroyVbo = true, const bool destroyVao = true);
@@ -28,7 +30,8 @@ class Polygon : public std::enable_shared_from_this<Polygon> {
 
   public:
     const int nbSides{};
-    Polygon(int nbSides, const glm::vec2& a = glm::vec2(0.0),
+    Polygon(int nbSides, bool isVerbose = true,
+            const glm::vec2& a = glm::vec2(0.0),
             const glm::vec2& b = glm::vec2(0.2, 0.0));
     ~Polygon();
     Polygon(const Polygon&) = delete;

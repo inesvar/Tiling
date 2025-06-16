@@ -12,13 +12,17 @@ using namespace glm;
 
 /// @brief Create a polygon with `nbSides` vertices `a`, `b`...
 /// @param nbSides (should be between 3 and 8 included)
+/// @param isVerbose whether to print lifecycle events, defaults to true
 /// @param a defaults to (0.0, 0.0)
 /// @param b defaults to (0.2, 0.0)
-Polygon::Polygon(int nbSides, const vec2& a, const vec2& b) : nbSides(nbSides) {
+Polygon::Polygon(int nbSides, bool isVerbose, const vec2& a, const vec2& b)
+    : verbose(isVerbose), nbSides(nbSides) {
     initPoints();
     initGL();
     positionAt(a, b);
-    log(" was " GREEN "created" RESET ".");
+    if (verbose) {
+        log(" was " GREEN "created" RESET ".");
+    }
 }
 
 /// @brief Bind polygon to edge `edge` on `other`.
@@ -28,7 +32,9 @@ bool Polygon::bindTo(const std::shared_ptr<Polygon> other, int edge) {
     bool success = true;
     positionAt(other->modelMatrix * vec3(other->points[edge + 1], 1.0),
                other->modelMatrix * vec3(other->points[edge], 1.0));
-    log(" was " YELLOW "bound" RESET ".");
+    if (verbose) {
+        log(" was " YELLOW "bound" RESET ".");
+    }
     return success;
 }
 
@@ -89,7 +95,9 @@ void Polygon::setColor(const PolygonColor& color) { this->color = color; }
 int Polygon::getColorIndex() const { return static_cast<int>(this->color); }
 
 vec2 Polygon::getFirstVertex() const { return modelMatrix[2]; }
+
 vec2 Polygon::getFirstEdge() const { return modelMatrix[0] + modelMatrix[2]; }
+
 vec2 Polygon::getVertex(const int vertex) const {
     return modelMatrix * vec3(points[vertex], 1.0);
 }
@@ -103,21 +111,23 @@ void Polygon::debug() const {
 
 Polygon::~Polygon() {
     destroyGL();
-    log(" was " RED "deleted" RESET ".");
+    if (verbose) {
+        log(" was " RED "deleted" RESET ".");
+    }
 }
 
 void Polygon::initPoints() {
     assert(nbSides >= 2);
+    // Vertex 0 is duplicated at the end of `points`
+    // so that the last edge can be fetched like the others
+    // (otherwise the two vec2 wouldn't be contiguous).
     points.resize(nbSides + 1);
-    vec2 xy = vec2(-0.0f);
+    vec2 xy = vec2(0.0f);
     float closingAngle = 2.0 * pi<double>() / nbSides;
     for (int n = 0; n <= nbSides; n++) {
         points[n] = xy;
         xy += rotate(n * closingAngle);
     }
-    // Vertex 0 is duplicated at the end of `points`
-    // so that the last edge can be fetched like the others
-    // (otherwise the two vec2 wouldn't be contiguous).
 }
 
 void Polygon::initGL() {
