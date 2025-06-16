@@ -17,7 +17,6 @@ TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     int positionUniform = glGetUniformLocation(shaderProgram, "windowSize");
     glUniform2f(positionUniform, 1.0, 1.0);
     initGlfwCallbacks();
-    edges.emplace_back(std::make_shared<Polygon>(2), 0);
     currentEdge = edges.begin();
     viewMatrix = glm::mat3x2(1.0);
     log(" was " GREEN "created" RESET ".");
@@ -39,7 +38,6 @@ TilingApp::~TilingApp() {
 void TilingApp::addPolygon(int nbSides) {
     if (polygons.empty()) {
         polygons.emplace_back(new Polygon(nbSides));
-        edges.clear();
         for (int i = 0; i < nbSides; i++) {
             edges.emplace_back(polygons.back(), i);
         }
@@ -218,7 +216,12 @@ void TilingApp::render() const {
     for (auto& edge : edges) {
         edge.underline(shaderProgram);
     }
-    currentEdge->highlight(shaderProgram);
+    if (currentEdge != edges.cend()) {
+        currentEdge->highlight(shaderProgram);
+    } else {
+        std::unique_ptr<Polygon> dummyPolygon(new Polygon(2, false));
+        dummyPolygon->highlightEdge(shaderProgram, 0);
+    }
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -245,7 +248,6 @@ void TilingApp::initGlfwCallbacks() {
 void TilingApp::removeAllPolygons() {
     edges.clear();
     polygons.clear();
-    edges.emplace_back(std::make_shared<Polygon>(2), 0);
     links.clear();
     currentEdge = edges.begin();
     resetViewCenter();
@@ -253,6 +255,9 @@ void TilingApp::removeAllPolygons() {
 
 std::list<Edge>::const_iterator
 TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
+    if (edges.empty()) {
+        return edge;
+    }
     auto incremented = std::next(edge);
     if (incremented == edges.cend()) {
         incremented = edges.cbegin();
@@ -262,6 +267,9 @@ TilingApp::circularNext(std::list<Edge>::const_iterator& edge) const {
 
 std::list<Edge>::const_iterator
 TilingApp::circularPrev(std::list<Edge>::const_iterator& edge) const {
+    if (edges.empty()) {
+        return edge;
+    }
     auto toDecrement = edge;
     if (toDecrement == edges.cbegin()) {
         toDecrement = edges.cend();
