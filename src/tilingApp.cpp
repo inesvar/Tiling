@@ -248,7 +248,7 @@ void TilingApp::removeAllPolygons() {
     edges.emplace_back(std::make_shared<Polygon>(2), 0);
     links.clear();
     currentEdge = edges.begin();
-    updateViewCenter();
+    resetViewCenter();
 }
 
 std::list<Edge>::const_iterator
@@ -358,9 +358,7 @@ void TilingApp::keyCallback(GLFWwindow* window, int key,
     }
 }
 
-void TilingApp::updateViewCenter() {
-    viewMatrix[2] = -viewMatrix[0].x * currentEdge->getFirstVertex();
-}
+void TilingApp::resetViewCenter() { viewMatrix[2] = glm::vec2(0.0f, 0.0f); }
 
 void TilingApp::cursorPosCallback(__attribute__((unused)) GLFWwindow* window,
                                   double xpos, double ypos) {

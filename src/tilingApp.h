@@ -56,7 +56,7 @@ class TilingApp {
     void zoomIn();
     void zoomOut();
     void translate(const glm::vec2& direction);
-    void updateViewCenter();
+    void resetViewCenter();
 
   public:
     TilingApp(GLFWwindow* window);
