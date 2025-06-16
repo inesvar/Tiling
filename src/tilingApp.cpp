@@ -17,7 +17,7 @@ TilingApp::TilingApp(GLFWwindow* window) : window(window) {
     int positionUniform = glGetUniformLocation(shaderProgram, "windowSize");
     glUniform2f(positionUniform, 1.0, 1.0);
     initGlfwCallbacks();
-    currentEdge = edges.begin();
+    currentEdge = edges.cbegin();
     viewMatrix = glm::mat3x2(1.0);
     log(" was " GREEN "created" RESET ".");
 }
@@ -41,8 +41,8 @@ void TilingApp::addPolygon(int nbSides) {
         for (int i = 0; i < nbSides; i++) {
             edges.emplace_back(polygons.back(), i);
         }
-        currentEdge = edges.begin();
-        polygons.back()->setColor(static_cast<PolygonColor>(0));
+        currentEdge = edges.cbegin();
+        polygons.back()->setColor(PolygonColor{});
     } else {
         // create new polygon
         polygons.emplace_back(new Polygon(nbSides));
@@ -55,7 +55,7 @@ void TilingApp::addPolygon(int nbSides) {
         // store the new edges in `edges` (between iterators `left` and `right`)
         auto right = circularNext(currentEdge);
         std::list<Edge>::const_iterator left =
-            edges.insert(right, newEdges.begin(), newEdges.end());
+            edges.insert(right, newEdges.cbegin(), newEdges.cend());
         std::vector<bool> neighborColors(11, true);
         // for any consecutive overlapping edges
         // (1) update `links` (insert the two overlapping edges)
@@ -160,7 +160,7 @@ void TilingApp::removeLastPolygon() {
             std::find_if(edges.begin(), edges.end(), [lastPolygon](Edge& edge) {
                 return (edge.polygon != lastPolygon);
             });
-        edges.splice(edges.end(), edges, edges.begin(), futureRight);
+        edges.splice(edges.cend(), edges, edges.cbegin(), futureRight);
         removeLastPolygon();
         return;
     }
@@ -249,7 +249,7 @@ void TilingApp::removeAllPolygons() {
     edges.clear();
     polygons.clear();
     links.clear();
-    currentEdge = edges.begin();
+    currentEdge = edges.cbegin();
     resetViewCenter();
 }
 
