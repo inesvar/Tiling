@@ -37,22 +37,22 @@
 /// that polygons are always all connected.
 class TilingApp {
     std::vector<std::shared_ptr<Polygon>> polygons{};
-    unsigned shaderProgram{};
-    GLFWwindow* window{};
+    std::list<Edge>::const_iterator currentEdge{};
     std::list<Edge> edges{};
     std::unordered_map<Edge, Edge, EdgeHash> links{};
-    std::list<Edge>::const_iterator currentEdge{};
+    unsigned shaderProgram{};
     glm::mat3x2 viewMatrix{};
+    GLFWwindow* window{};
 
     void log(const char* log) const;
     void initGlfwCallbacks();
     void destroyGL(const bool destroyProgram = true);
-    void handleKeyPress(const int key, const int mods);
-    void handleScroll(const double xoffset, const double yoffset);
     std::list<Edge>::const_iterator
     circularNext(std::list<Edge>::const_iterator& edge) const;
     std::list<Edge>::const_iterator
     circularPrev(std::list<Edge>::const_iterator& edge) const;
+    void handleKeyPress(const int key, const int mods);
+    void handleScroll(const double xoffset, const double yoffset);
     void zoomIn();
     void zoomOut();
     void translate(const glm::vec2& direction);
